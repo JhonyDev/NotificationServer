@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -125,5 +125,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 print('----------------Adding cron job')
 
 CRONJOBS = [
-    ('*/60 * * * *', 'api.CronJobs.weekly_notification_cronjob', '>> api/file.log'),
+    ('*/60 * * * *', 'api.CronJobs.weekly_notification_cronjob', '>> ' + os.path.join(BASE_DIR, 'data.log') + ' 2>&1'),
 ]
