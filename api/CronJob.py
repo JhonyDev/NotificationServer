@@ -1,8 +1,7 @@
 from .models import CronLogs
 
 
-def weekly_notification_cronjob():
+def my_cron_job():
     cron = CronLogs()
-    cron.log_time = 'alsdjlsadj'
+    cron.log_time = 'cron job inside'
     cron.save()
-

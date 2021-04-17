@@ -122,12 +122,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-print('----------------Adding cron job')
-
 CRONJOBS = [
-    ('*/60 * * * *', 'api.CronJobs.weekly_notification_cronjob'),
+    ('*/60 * * * *', 'api.CronJob.my_cron_job')
 ]
-
-CRONTAB_COMMAND_SUFFIX = '2>&1'
-
-CRON_CLASSES = ['api.CronJobs.WeeklyNotificationCronJob']
