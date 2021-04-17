@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django_cron',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_crontab',
@@ -124,5 +125,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 print('----------------Adding cron job')
 
 CRONJOBS = [
-    ('*/60 * * * *', 'api.CronJobs.weekly_notification_cronjob', '>> ' + os.path.join(BASE_DIR, 'data.log') + ' 2>&1'),
+    ('*/60 * * * *', 'api.CronJobs.weekly_notification_cronjob'),
 ]
+
+CRONTAB_COMMAND_SUFFIX = '2>&1'
+
+CRON_CLASSES = ['Bridger.CronJobs.WeeklyNotificationCronJob']
