@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from api.models import CronLogs
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,6 +24,11 @@ SECRET_KEY = 'django-insecure-eij4p%-t&1gfe_)5=_285^i5*v&h9(^k)i3epazd!b8@m9l4g6
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+cron_logs = CronLogs()
+cron_logs.log_time = '50'
+print('writing to database : ' + cron_logs.log_time)
+cron_logs.save()
 
 ALLOWED_HOSTS = ['*']
 # Application definition
