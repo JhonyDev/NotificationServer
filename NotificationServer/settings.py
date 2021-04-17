@@ -130,4 +130,4 @@ CRONJOBS = [
 
 CRONTAB_COMMAND_SUFFIX = '2>&1'
 
-CRON_CLASSES = ['Bridger.CronJobs.WeeklyNotificationCronJob']
+CRON_CLASSES = ['api.CronJobs.WeeklyNotificationCronJob']
