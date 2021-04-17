@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
-    'api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,8 +40,6 @@ INSTALLED_APPS = [
     'django_crontab',
 
 ]
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,5 +125,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 print('----------------Adding cron job')
 
 CRONJOBS = [
-    ('*/60 * * * *', 'api.CronJobs.weekly_notification_cronjob'),
+    ('*/60 * * * *', 'api.CronJobs.weekly_notification_cronjob', '>> api/file.log'),
 ]
