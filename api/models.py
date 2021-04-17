@@ -20,3 +20,7 @@ class Notification(models.Model):
 
 class Users(models.Model):
     user_token = models.CharField(max_length=50)
+
+
+class CronLogs(models.Model):
+    log_time = models.CharField(max_length=100)
