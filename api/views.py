@@ -8,7 +8,8 @@ from .serializers import NotificationPrioritySerializer
 
 class NotificationPriList(APIView):
     print('This is some testing text')
-    cron_log = CronLogs('test cron')
+    cron_log = CronLogs()
+    cron_log.log_time = 'some log time'
     cron_log.save()
 
     def get(self, request):
