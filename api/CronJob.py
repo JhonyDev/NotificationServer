@@ -31,4 +31,5 @@ def push_notify(title):
 
 
 def my_cron_job():
+    print('This is a cron job that is running')
     push_notify('running cron')
