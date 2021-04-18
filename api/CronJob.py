@@ -25,9 +25,6 @@ def push_notify(title):
             }
         }
     )
-    cron = CronLogs()
-    cron.log_time = response['publishId']
-    cron.save()
 
 
 def my_cron_job():
