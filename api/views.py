@@ -19,17 +19,9 @@ app = Flask(__name__)
 
 
 class NotificationPriList(APIView):
-    push_notify('from views')
 
     def get(self, request):
-        # Do your normal auth checks here 🔒
-        user_id = ''  # get it from your auth system
-        user_id_in_query_param = request.args.get('user_id')
-        if user_id != user_id_in_query_param:
-            return 'Inconsistent request', 401
-
-        beams_token = beams_client.generate_token(user_id)
-        return jsonify(beams_token)
+        pass
 
     def post(self):
         pass
