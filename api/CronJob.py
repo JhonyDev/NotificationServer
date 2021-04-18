@@ -29,5 +29,7 @@ def push_notify(title):
 
 
 def my_cron_job():
-    print('This is a cron job that is running')
+    cron = CronLogs()
+    cron.log_time = 'new cron log'
+    cron.save()
     push_notify('running cron')
