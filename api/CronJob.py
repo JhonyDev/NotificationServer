@@ -2,6 +2,7 @@ from .models import CronLogs
 
 
 def push_notify():
+    print('inside from cronjob')
     from pusher_push_notifications import PushNotifications
 
     beams_client = PushNotifications(

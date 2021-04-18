@@ -4,9 +4,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import NotificationPriority, CronLogs
 from .serializers import NotificationPrioritySerializer
+from .CronJob import push_notify
 
 
 class NotificationPriList(APIView):
+    push_notify()
 
     def get(self, request):
         stocks = NotificationPriority.objects.all()
