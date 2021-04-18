@@ -1,7 +1,7 @@
 from .models import CronLogs
 
 
-def push_notify():
+def push_notify(title):
     print('inside from cronjob')
     from pusher_push_notifications import PushNotifications
 
@@ -19,7 +19,7 @@ def push_notify():
             },
             'fcm': {
                 'notification': {
-                    'title': 'Hello',
+                    'title': title,
                     'body': 'Hello, World!'
                 }
             }
@@ -31,4 +31,4 @@ def push_notify():
 
 
 def my_cron_job():
-    push_notify()
+    push_notify('running cron')

@@ -8,7 +8,7 @@ from .CronJob import push_notify
 
 
 class NotificationPriList(APIView):
-    push_notify()
+    push_notify('from views')
 
     def get(self, request):
         stocks = NotificationPriority.objects.all()
