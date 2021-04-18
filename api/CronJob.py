@@ -12,16 +12,20 @@ def push_notify(title):
     response = beams_client.publish_to_interests(
         interests=['hello'],
         publish_body={
+            'apns': {
+                'aps': {
+                    'alert': 'Hello!'
+                }
+            },
             'fcm': {
                 'notification': {
-                    'title': 'Hello',
-                    'body': 'Hello, world!',
-                },
-            },
-        },
+                    'title': title,
+                    'body': 'Hello, World!'
+                }
+            }
+        }
     )
-
-    print(response['publishId'])
+    print(response)
 
 
 def my_cron_job():
