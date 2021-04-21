@@ -143,7 +143,7 @@ def init_first_half_notification(fixture_item, first_half, fixture_id, user_id):
 
 
 def init_second_half_notification(fixture_item, second_half_result, fixture_id, user_id, notification_id):
-    if second_half_result == '':
+    if not second_half_result:
         return
     notification_status = NotificationStatus.objects.filter(notification_id=notification_id)
     if not notification_status:
