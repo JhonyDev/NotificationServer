@@ -165,6 +165,7 @@ def init_match_started(fixture_item, fixture_id):
 def init_event_notification(fixture_item, fixture_id, user_id):
     events_list = fixture_item['events']
     for event in events_list:
+
         if event.get('type') == info.CARD:
             if event.get('detail') == info.YELLOW_CARD:
                 check_if_in_priority(info.YELLOW_CARDS, fixture_id, fixture_item, user_id)
