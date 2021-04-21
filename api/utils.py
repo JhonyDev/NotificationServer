@@ -193,9 +193,11 @@ def check_for_updates(fixture_id, user_id, notification_id):
     json_object = json.loads(r.content)
     fixture_item = json_object.get('api')
     if not fixture_item:
+        print('---No API')
         return
     fixture_item = fixture_item.get('fixtures')
     if not fixture_item:
+        print('---No Fixture')
         return
     print(fixture_item)
     fixture_item = fixture_item[0]
@@ -207,6 +209,7 @@ def check_for_updates(fixture_id, user_id, notification_id):
     init_match_started(fixture_item, fixture_id)
 
     if fixture_item.get('events', '') == '':
+        print('---No events')
         return
 
     init_event_notification(fixture_item, fixture_id, user_id)
