@@ -28,6 +28,7 @@ def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
             }
         }
     )
+    print('-------------------------------------' + user_id + '-------------------------------')
     print(response)
 
 
