@@ -163,7 +163,10 @@ def init_match_started(fixture_item, fixture_id):
 
 
 def init_event_notification(fixture_item, fixture_id, user_id):
-    events_list = fixture_item['events']
+    events_list = fixture_item.get('events')
+    if not events_list:
+        return
+
     for event in events_list:
 
         if event.get('type') == info.CARD:
