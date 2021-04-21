@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from api import views
+from api.views import (api_post_user_id, api_post_notification_priority, test)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', views.NotificationPriList.as_view()),
+    path('api/post_user_id', api_post_user_id, name='post'),
+    path('api/post_notification_priority', api_post_notification_priority, name='post'),
+    path('api/test', test, name='get'),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
