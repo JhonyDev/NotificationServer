@@ -186,10 +186,13 @@ def check_for_updates(fixture_id, user_id, notification_id):
 
     r = requests.get(url, headers=headers)
     json_object = json.loads(r.content)
-    fixture_item = json_object['api']['fixtures']
-    print(fixture_item)
+    fixture_item = json_object.get('api')
     if not fixture_item:
         return
+    fixture_item = fixture_item.get('fixtures')
+    if not fixture_item:
+        return
+    print(fixture_item)
     fixture_item = fixture_item[0]
     first_half_result = fixture_item['score'].get('halftime', '')
     second_half_result = fixture_item['score'].get('fulltime', '')
