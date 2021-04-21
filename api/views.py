@@ -40,18 +40,5 @@ def api_post_notification_priority(request):
 
 
 def test(request):
-    response_str = ''
-    url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/653088'
-
-    headers = {'Accept': 'application/json',
-               'content-type': 'application/json',
-               'x-rapidapi-key': '9bc6e8bddamshfc5efe4660335c5p1254e0jsnb8f0b64ef59e',
-               'x-rapidapi-host': 'api-football-v1.p.rapidapi.com'}
-
-    r = requests.get(url, headers=headers)
-    json_object = json.loads(r.content)
-    fixture_item = json_object['api']['fixtures']
-    first_half_result = fixture_item[0]['score'].get('halftime')
-    second_half_result = fixture_item[0]['score'].get('fulltime')
     my_cron_job()
-    return HttpResponse(first_half_result + ' ' + second_half_result)
+    return HttpResponse('ALL DONE')

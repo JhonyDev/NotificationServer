@@ -157,6 +157,7 @@ def init_second_half_notification(fixture_item, second_half_result, fixture_id, 
         check_if_in_priority(info.HALF_TIME, fixture_id, fixture_item, user_id)
         break
 
+
 def init_match_started(fixture_item, fixture_id):
     if fixture_item.get('elapsed') < 10 and fixture_item.get('status') == info.MATCH_STARTED:
         check_if_in_priority(info.KICK_OFF, fixture_id, fixture_item)
