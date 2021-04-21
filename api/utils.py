@@ -37,8 +37,8 @@ def full_time_notification(fixture_item, user_id):
         notification.delete()
         return
     title = 'Full Time'
-    subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + fixture_item.get('goalsHomeTeam')
-    subtitle += '-' + fixture_item.get('goalsAwayTeam') + ' ' + fixture_item.get('awayTeam').get('team_name')
+    subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
+    subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
     push_notify(title, subtitle, '', info.FULL_TIME, user_id)
 
 
@@ -48,8 +48,8 @@ def half_time_notification(fixture_item, user_id):
         notification.delete()
         return
     title = 'Half Time'
-    subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + fixture_item.get('goalsHomeTeam')
-    subtitle += '-' + fixture_item.get('goalsAwayTeam') + ' ' + fixture_item.get('awayTeam').get('team_name')
+    subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
+    subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
     push_notify(title, subtitle, '', info.HALF_TIME, user_id)
 
 
