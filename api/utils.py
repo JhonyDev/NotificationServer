@@ -194,10 +194,12 @@ def check_for_updates(fixture_id, user_id, notification_id):
     fixture_item = json_object.get('api')
     if not fixture_item:
         print('---No API')
+        print(fixture_item)
         return
     fixture_item = fixture_item.get('fixtures')
     if not fixture_item:
         print('---No Fixture')
+        print(fixture_item)
         return
     print(fixture_item)
     fixture_item = fixture_item[0]
