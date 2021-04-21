@@ -74,7 +74,7 @@ def red_card_notification(fixture_item, user_id):
         return
     title = 'Red Card'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    subtitle2 = fixture_item.get('elapsed') + ' min - ' + fixture_item.get('redCards')
+    subtitle2 = str(fixture_item.get('elapsed')) + ' min - ' + str(fixture_item.get('redCards'))
     push_notify(title, subtitle, subtitle2, info.RED_CARDS, user_id)
 
 
@@ -85,7 +85,7 @@ def yellow_card_notification(fixture_item, user_id):
         return
     title = 'Yellow Card'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    subtitle2 = fixture_item.get('elapsed') + ' min - ' + fixture_item.get('yellowCards')
+    subtitle2 = str(fixture_item.get('elapsed')) + ' min - ' + str(fixture_item.get('yellowCards'))
     push_notify(title, subtitle, subtitle2, info.YELLOW_CARDS, user_id)
 
 
@@ -96,7 +96,7 @@ def goal_notification(fixture_item, user_id):
         return
     title = 'Yellow Card'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    subtitle2 = fixture_item.get('elapsed') + ' min '
+    subtitle2 = str(fixture_item.get('elapsed')) + ' min '
     push_notify(title, subtitle, subtitle2, info.GOALS, user_id)
 
 
