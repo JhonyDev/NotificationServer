@@ -246,6 +246,6 @@ def check_for_updates(fixture_id):
     for notification_priority in notification_priority_list:
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
 
-    if fixture_item.get('status') == 'Match Finished':
+    if fixture_item[0].get('status') == 'Match Finished':
         fixture = Fixtures.objects.get(fixture_id=fixture_id)
         fixture.delete()
