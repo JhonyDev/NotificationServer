@@ -72,7 +72,6 @@ def red_card_notification(fixture_item, user_id):
         notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
         notification.delete()
         return
-    title = 'Red Card'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
     events = fixture_item.get('events')
     event_index = 0
@@ -82,7 +81,7 @@ def red_card_notification(fixture_item, user_id):
             elapsed_time = str(event.get('elapsed'))
             break
         event_index += 1
-    title += ' ' + elapsed_time
+    title = 'Red Card ' + elapsed_time
     subtitle2 = str(fixture_item.get('redCards'))
     push_notify(title, subtitle, subtitle2, info.RED_CARDS, user_id)
 
@@ -92,7 +91,6 @@ def yellow_card_notification(fixture_item, user_id):
         notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
         notification.delete()
         return
-    title = 'Yellow Card'
     events = fixture_item.get('events')
     event_index = 0
     elapsed_time = ''
@@ -101,7 +99,7 @@ def yellow_card_notification(fixture_item, user_id):
             elapsed_time = str(event.get('elapsed'))
             break
         event_index += 1
-    title += ' ' + elapsed_time
+    title = 'Yellow Card ' + elapsed_time
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
     subtitle2 = str(fixture_item.get('yellowCards'))
 
@@ -113,7 +111,6 @@ def goal_notification(fixture_item, user_id):
         notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
         notification.delete()
         return
-    title = 'Yellow Card'
     events = fixture_item.get('events')
     event_index = 0
     elapsed_time = ''
@@ -122,7 +119,7 @@ def goal_notification(fixture_item, user_id):
             elapsed_time = str(event.get('elapsed'))
             break
         event_index += 1
-    title += ' ' + elapsed_time
+    title = 'Goal ' + elapsed_time
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
     push_notify(title, subtitle, '', info.GOALS, user_id)
 
