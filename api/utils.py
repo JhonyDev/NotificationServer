@@ -22,7 +22,7 @@ def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
             'fcm': {
                 'notification': {
                     'title': title,
-                    'body': subtitle + ' (' + subtitle_2 + ')'
+                    'body': subtitle + ' \n ' + subtitle_2
                 }
             }
         }
@@ -76,12 +76,14 @@ def red_card_notification(fixture_item, user_id):
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
     events = fixture_item.get('events')
     event_index = 0
-    for x in range(events):
-        if fixture_item.get('elapsed')[x].get('type') == info.RED_CARD:
-            event_index = x
+    elapsed_time = ''
+    for event in events:
+        if event.get('type') == info.RED_CARD:
+            elapsed_time = str(event.get('elapsed'))
             break
-    subtitle2 = str(fixture_item.get('events')[event_index].get('elapsed')) + ' min - ' + str(
-        fixture_item.get('redCards'))
+        event_index += 1
+    title += ' ' + elapsed_time
+    subtitle2 = str(fixture_item.get('redCards'))
     push_notify(title, subtitle, subtitle2, info.RED_CARDS, user_id)
 
 
@@ -91,15 +93,17 @@ def yellow_card_notification(fixture_item, user_id):
         notification.delete()
         return
     title = 'Yellow Card'
-    subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    event_index = 0
     events = fixture_item.get('events')
-    for x in range(events):
-        if fixture_item.get('elapsed')[x].get('type') == info.RED_CARD:
-            event_index = x
+    event_index = 0
+    elapsed_time = ''
+    for event in events:
+        if event.get('type') == info.RED_CARD:
+            elapsed_time = str(event.get('elapsed'))
             break
-    subtitle2 = str(fixture_item.get('events')[event_index].get('elapsed')) + ' min - ' + str(
-        fixture_item.get('yellowCards'))
+        event_index += 1
+    title += ' ' + elapsed_time
+    subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+    subtitle2 = str(fixture_item.get('yellowCards'))
 
     push_notify(title, subtitle, subtitle2, info.YELLOW_CARDS, user_id)
 
@@ -110,15 +114,17 @@ def goal_notification(fixture_item, user_id):
         notification.delete()
         return
     title = 'Yellow Card'
-    subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    event_index = 0
     events = fixture_item.get('events')
-    for x in range(events):
-        if fixture_item.get('elapsed')[x].get('type') == info.RED_CARD:
-            event_index = x
+    event_index = 0
+    elapsed_time = ''
+    for event in events:
+        if event.get('type') == info.RED_CARD:
+            elapsed_time = str(event.get('elapsed'))
             break
-    subtitle2 = str(fixture_item.get('events')[event_index].get('elapsed')) + ' min '
-    push_notify(title, subtitle, subtitle2, info.GOALS, user_id)
+        event_index += 1
+    title += ' ' + elapsed_time
+    subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+    push_notify(title, subtitle, '', info.GOALS, user_id)
 
 
 def check_if_in_priority(param, fixture_id, fixture_item, user_id):
@@ -126,6 +132,7 @@ def check_if_in_priority(param, fixture_id, fixture_item, user_id):
     print(notification_priorities)
     for notification_priority in notification_priorities:
         print(notification_priority)
+
         if not notification_priority:
             return
 
