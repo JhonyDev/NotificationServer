@@ -1,6 +1,5 @@
 import json
 
-from django.http import HttpResponse
 from pusher_push_notifications import PushNotifications
 import requests
 from .models import NotificationPriority, NotificationStatus
@@ -23,11 +22,12 @@ def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
             'fcm': {
                 'notification': {
                     'title': title,
-                    'body': subtitle + '#' + subtitle_2 + '#' + str(notification_id)
+                    'body': subtitle + ' (' + subtitle_2 + ')'
                 }
             }
         }
     )
+
     print('-------------------------------------' + user_id + '-------------------------------')
     print('subtitle : ' + subtitle)
     print('subtitle2 : ' + subtitle_2)
@@ -74,7 +74,14 @@ def red_card_notification(fixture_item, user_id):
         return
     title = 'Red Card'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    subtitle2 = str(fixture_item.get('elapsed')) + ' min - ' + str(fixture_item.get('redCards'))
+    events = fixture_item.get('events')
+    event_index = 0
+    for x in range(events):
+        if fixture_item.get('elapsed')[x].get('type') == info.RED_CARD:
+            event_index = x
+            break
+    subtitle2 = str(fixture_item.get('events')[event_index].get('elapsed')) + ' min - ' + str(
+        fixture_item.get('redCards'))
     push_notify(title, subtitle, subtitle2, info.RED_CARDS, user_id)
 
 
@@ -85,7 +92,15 @@ def yellow_card_notification(fixture_item, user_id):
         return
     title = 'Yellow Card'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    subtitle2 = str(fixture_item.get('elapsed')) + ' min - ' + str(fixture_item.get('yellowCards'))
+    event_index = 0
+    events = fixture_item.get('events')
+    for x in range(events):
+        if fixture_item.get('elapsed')[x].get('type') == info.RED_CARD:
+            event_index = x
+            break
+    subtitle2 = str(fixture_item.get('events')[event_index].get('elapsed')) + ' min - ' + str(
+        fixture_item.get('yellowCards'))
+
     push_notify(title, subtitle, subtitle2, info.YELLOW_CARDS, user_id)
 
 
@@ -96,7 +111,13 @@ def goal_notification(fixture_item, user_id):
         return
     title = 'Yellow Card'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    subtitle2 = str(fixture_item.get('elapsed')) + ' min '
+    event_index = 0
+    events = fixture_item.get('events')
+    for x in range(events):
+        if fixture_item.get('elapsed')[x].get('type') == info.RED_CARD:
+            event_index = x
+            break
+    subtitle2 = str(fixture_item.get('events')[event_index].get('elapsed')) + ' min '
     push_notify(title, subtitle, subtitle2, info.GOALS, user_id)
 
 
@@ -201,7 +222,6 @@ def init(fixture_item, user_id, notification_id, fixture_id):
 
 def check_for_updates(fixture_id):
     url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
-
     headers = {'Accept': 'application/json',
                'content-type': 'application/json',
                'x-rapidapi-key': '9bc6e8bddamshfc5efe4660335c5p1254e0jsnb8f0b64ef59e',

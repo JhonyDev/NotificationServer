@@ -45,11 +45,8 @@ def test(request):
     notifications = list(NotificationPriority.objects.all())
     fixtures = list(Fixtures.objects.all())
     for notification in notifications:
-        print(notification.get_fixture_id())
         fixture_inserted = False
         for fixture in fixtures:
-            print(notification.get_fixture_id())
-            print(fixture.get_fixture_id())
             if fixture.get_fixture_id() == notification.get_fixture_id():
                 fixture_inserted = True
                 continue
