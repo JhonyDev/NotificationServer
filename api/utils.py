@@ -22,7 +22,7 @@ def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
             'fcm': {
                 'notification': {
                     'title': title,
-                    'body': subtitle + '<br> ' + subtitle_2
+                    'body': subtitle + '                      ' + subtitle_2
                 }
             }
         }
