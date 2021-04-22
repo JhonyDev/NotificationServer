@@ -22,7 +22,7 @@ def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
             'fcm': {
                 'notification': {
                     'title': title,
-                    'body': subtitle + ' \n ' + subtitle_2
+                    'body': subtitle + '<br> ' + subtitle_2
                 }
             }
         }
@@ -78,7 +78,7 @@ def red_card_notification(fixture_item, user_id):
     event_index = 0
     elapsed_time = ''
     for event in events:
-        if event.get('type') == info.RED_CARD:
+        if event.get('type') == info.CARD and event.get('detail') == info.RED_CARD:
             elapsed_time = str(event.get('elapsed'))
             break
         event_index += 1
@@ -96,7 +96,7 @@ def yellow_card_notification(fixture_item, user_id):
     event_index = 0
     elapsed_time = '-'
     for event in events:
-        if event.get('type') == info.YELLOW_CARD:
+        if event.get('type') == info.CARD and event.get('detail') == info.RED_CARD:
             elapsed_time = str(event.get('elapsed'))
             break
         event_index += 1
