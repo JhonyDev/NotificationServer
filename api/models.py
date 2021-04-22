@@ -31,6 +31,14 @@ class NotificationPriority(models.Model):
         return self.fixture_id
 
 
+class Fixtures(models.Model):
+    fixture_id = models.CharField(max_length=20, primary_key=True)
+    objects = models.Manager()
+
+    def get_fixture_id(self):
+        return self.fixture_id
+
+
 class Notification(models.Model):
     notification_id = models.CharField(max_length=50)
     user_token = models.CharField(max_length=500)

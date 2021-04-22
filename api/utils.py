@@ -181,27 +181,7 @@ def init_event_notification(fixture_item, fixture_id, user_id):
             check_if_in_priority(info.GOALS, fixture_id, fixture_item, user_id)
 
 
-def check_for_updates(fixture_id, user_id, notification_id):
-    url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
-
-    headers = {'Accept': 'application/json',
-               'content-type': 'application/json',
-               'x-rapidapi-key': '9bc6e8bddamshfc5efe4660335c5p1254e0jsnb8f0b64ef59e',
-               'x-rapidapi-host': 'api-football-v1.p.rapidapi.com'}
-
-    r = requests.get(url, headers=headers)
-    json_object = json.loads(r.content)
-    fixture_item = json_object.get('api')
-    if not fixture_item:
-        print('---No API')
-        print(json_object)
-        return
-    fixture_item = fixture_item.get('fixtures')
-    if not fixture_item:
-        print('---No Fixture')
-        print(fixture_item)
-        return
-    print(fixture_item)
+def init(fixture_item, user_id, notification_id, fixture_id):
     fixture_item = fixture_item[0]
     first_half_result = fixture_item['score'].get('halftime', '')
     second_half_result = fixture_item['score'].get('fulltime', '')
@@ -217,3 +197,31 @@ def check_for_updates(fixture_id, user_id, notification_id):
         return
 
     init_event_notification(fixture_item, fixture_id, user_id)
+
+
+def check_for_updates(fixture_id):
+    url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
+
+    headers = {'Accept': 'application/json',
+               'content-type': 'application/json',
+               'x-rapidapi-key': '9bc6e8bddamshfc5efe4660335c5p1254e0jsnb8f0b64ef59e',
+               'x-rapidapi-host': 'api-football-v1.p.rapidapi.com'}
+
+    r = requests.get(url, headers=headers)
+    json_object = json.loads(r.content)
+    fixture_item = json_object.get('api')
+    if not fixture_item:
+        print('---No API')
+        print(json_object)
+        return
+
+    fixture_item = fixture_item.get('fixtures')
+    if not fixture_item:
+        print('---No Fixture')
+        print(fixture_item)
+        return
+    notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
+    for notification_priority in notification_priority_list:
+        print('user_id = ' + notification_priority.get_user_id())
+        print('notification_id = ' + notification_priority.get_notification_id())
+        init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)

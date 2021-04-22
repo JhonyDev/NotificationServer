@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import requests
 
-from .models import Users, NotificationPriority, NotificationStatus
-from .serializers import UserSerializer, NotificationPrioritySerializer, NotificationStatusSerializer
+from .models import Users, NotificationPriority, NotificationStatus, Fixtures
+from .serializers import UserSerializer, NotificationPrioritySerializer
 from .CronJob import my_cron_job
 
 
@@ -34,11 +34,32 @@ def api_post_notification_priority(request):
         serializer.save()
         notification_status.notification_id = notification_priority.notification_id
         notification_status.save()
-
+        fixture = Fixtures()
+        fixture.fixture_id = notification_priority.get_fixture_id()
+        fixture.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def test(request):
+    notifications = list(NotificationPriority.objects.all())
+    fixtures = list(Fixtures.objects.all())
+    for notification in notifications:
+        print(notification.get_fixture_id())
+        fixture_inserted = False
+        for fixture in fixtures:
+            print(notification.get_fixture_id())
+            print(fixture.get_fixture_id())
+            if fixture.get_fixture_id() == notification.get_fixture_id():
+                fixture_inserted = True
+                continue
+            fixture = Fixtures()
+            fixture.fixture_id = notification.get_fixture_id()
+            fixture.save()
+            fixture_inserted = True
+        if not fixture_inserted:
+            fixture = Fixtures()
+            fixture.fixture_id = notification.get_fixture_id()
+            fixture.save()
     my_cron_job()
-    return HttpResponse('ALL DONE')
+    return HttpResponse('Cron Initiated')
