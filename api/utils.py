@@ -2,11 +2,19 @@ import json
 
 from pusher_push_notifications import PushNotifications
 import requests
-from .models import NotificationPriority, NotificationStatus
+from .models import NotificationPriority, NotificationStatus, SentNotification
 from api import info
 
 
-def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
+def push_notify(title, subtitle, user_id):
+    notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
+    if notification:
+        return
+    notification = SentNotification()
+    notification.title = title
+    notification.subtitle = subtitle
+    notification.user = user_id
+
     beams_client = PushNotifications(
         instance_id='1889a652-be8c-4e56-aed1-04bedd6eff47',
         secret_key='6274C8792B95D8C0A54DBE48ABFF7807DEEF94C6EFA83518E676280272254356',
@@ -22,18 +30,15 @@ def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
             'fcm': {
                 'notification': {
                     'title': title,
-                    'body': subtitle + '                      ' + subtitle_2
+                    'body': subtitle
                 }
             }
         }
     )
 
-    print('-------------------------------------' + user_id + '-------------------------------')
-    print('title : ' + title)
-    print('subtitle : ' + subtitle)
-    print('subtitle2 : ' + subtitle_2)
-    print('notification_id : ' + str(notification_id))
+    print('Notification Sent to ----->>>>' + user_id)
     print(response)
+    notification.save()
 
 
 def full_time_notification(fixture_item, user_id):
@@ -44,7 +49,7 @@ def full_time_notification(fixture_item, user_id):
     title = 'Full Time'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
     subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
-    push_notify(title, subtitle, '', info.FULL_TIME, user_id)
+    push_notify(title, subtitle, user_id)
 
 
 def half_time_notification(fixture_item, user_id):
@@ -55,7 +60,7 @@ def half_time_notification(fixture_item, user_id):
     title = 'Half Time'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
     subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
-    push_notify(title, subtitle, '', info.HALF_TIME, user_id)
+    push_notify(title, subtitle, user_id)
 
 
 def kick_off_notification(fixture_item, user_id):
@@ -65,7 +70,7 @@ def kick_off_notification(fixture_item, user_id):
         return
     title = 'Kick Off'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    push_notify(title, subtitle, '', info.KICK_OFF, user_id)
+    push_notify(title, subtitle, user_id)
 
 
 def red_card_notification(fixture_item, user_id):
@@ -83,8 +88,7 @@ def red_card_notification(fixture_item, user_id):
             break
         event_index += 1
     title = 'Red Card - ' + elapsed_time + ' min'
-    subtitle2 = str(fixture_item.get('redCards'))
-    push_notify(title, subtitle, subtitle2, info.RED_CARDS, user_id)
+    push_notify(title, subtitle, user_id)
 
 
 def yellow_card_notification(fixture_item, user_id):
@@ -102,9 +106,7 @@ def yellow_card_notification(fixture_item, user_id):
         event_index += 1
     title = 'Yellow Card - ' + elapsed_time + ' min'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    subtitle2 = str(fixture_item.get('yellowCards'))
-
-    push_notify(title, subtitle, subtitle2, info.YELLOW_CARDS, user_id)
+    push_notify(title, subtitle, user_id)
 
 
 def goal_notification(fixture_item, user_id):
@@ -120,14 +122,12 @@ def goal_notification(fixture_item, user_id):
             break
     title = 'Goal - ' + elapsed_time + ' min'
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    push_notify(title, subtitle, '', info.GOALS, user_id)
+    push_notify(title, subtitle, user_id)
 
 
 def check_if_in_priority(param, fixture_id, fixture_item, user_id):
     notification_priorities = NotificationPriority.objects.filter(user_id=user_id).filter(fixture_id=fixture_id)
-    print(notification_priorities)
     for notification_priority in notification_priorities:
-        print(notification_priority)
 
         if not notification_priority:
             return
@@ -161,10 +161,8 @@ def check_if_in_priority(param, fixture_id, fixture_item, user_id):
 
 
 def init_first_half_notification(fixture_item, first_half, fixture_id, user_id):
-    # if fixture_item.get(0)
     if first_half == '':
         return
-    print(fixture_item['elapsed'])
     if (90 / 2 + 11) > int(fixture_item['elapsed']) > (90 / 2):
         check_if_in_priority(info.HALF_TIME, fixture_id, fixture_item, user_id)
 
@@ -245,6 +243,4 @@ def check_for_updates(fixture_id):
         return
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
-        print('user_id = ' + notification_priority.get_user_id())
-        print('notification_id = ' + notification_priority.get_notification_id())
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)

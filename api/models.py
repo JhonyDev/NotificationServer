@@ -39,12 +39,20 @@ class Fixtures(models.Model):
         return self.fixture_id
 
 
-class Notification(models.Model):
-    notification_id = models.CharField(max_length=50)
-    user_token = models.CharField(max_length=500)
-    fixture_id = models.CharField(max_length=250)
-    notification_status = models.CharField(max_length=50)
+class SentNotification(models.Model):
+    title = models.CharField(max_length=50)
+    subtitle = models.CharField(max_length=50)
+    user = models.CharField(max_length=50)
     objects = models.Manager()
+
+    def get_title(self):
+        return self.title
+
+    def get_subtitle(self):
+        return self.subtitle
+
+    def get_user(self):
+        return self.user
 
 
 class Users(models.Model):
