@@ -2,7 +2,7 @@ import json
 
 from pusher_push_notifications import PushNotifications
 import requests
-from .models import NotificationPriority, NotificationStatus, SentNotification
+from .models import NotificationPriority, NotificationStatus, SentNotification, Fixtures
 from api import info
 
 
@@ -231,6 +231,7 @@ def check_for_updates(fixture_id):
     r = requests.get(url, headers=headers)
     json_object = json.loads(r.content)
     fixture_item = json_object.get('api')
+
     if not fixture_item:
         print('---No API')
         print(json_object)
@@ -244,3 +245,7 @@ def check_for_updates(fixture_id):
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
+
+    if fixture_item.get('status') == 'Match Finished':
+        fixture = Fixtures.objects.get(fixture_id=fixture_id)
+        fixture.delete()
