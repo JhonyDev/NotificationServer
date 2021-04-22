@@ -29,6 +29,7 @@ def push_notify(title, subtitle, subtitle_2, notification_id, user_id):
     )
 
     print('-------------------------------------' + user_id + '-------------------------------')
+    print('title : ' + title)
     print('subtitle : ' + subtitle)
     print('subtitle2 : ' + subtitle_2)
     print('notification_id : ' + str(notification_id))
@@ -95,7 +96,7 @@ def yellow_card_notification(fixture_item, user_id):
     event_index = 0
     elapsed_time = ''
     for event in events:
-        if event.get('type') == info.RED_CARD:
+        if event.get('type') == info.YELLOW_CARD:
             elapsed_time = str(event.get('elapsed'))
             break
         event_index += 1
@@ -112,13 +113,11 @@ def goal_notification(fixture_item, user_id):
         notification.delete()
         return
     events = fixture_item.get('events')
-    event_index = 0
     elapsed_time = ''
     for event in events:
-        if event.get('type') == info.RED_CARD:
+        if event.get('type') == info.GOAL:
             elapsed_time = str(event.get('elapsed'))
             break
-        event_index += 1
     title = 'Goal ' + elapsed_time
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
     push_notify(title, subtitle, '', info.GOALS, user_id)
