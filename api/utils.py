@@ -163,7 +163,7 @@ def check_if_in_priority(param, fixture_id, fixture_item, user_id):
 def init_first_half_notification(fixture_item, first_half, fixture_id, user_id):
     if first_half == '':
         return
-    if (90 / 2 + 11) > int(fixture_item['elapsed']) > (90 / 2):
+    if (90 / 2 + 6) > int(fixture_item['elapsed']) > (90 / 2):
         check_if_in_priority(info.HALF_TIME, fixture_id, fixture_item, user_id)
 
 
