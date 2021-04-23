@@ -168,19 +168,9 @@ def init_first_half_notification(fixture_item, first_half, fixture_id, user_id):
 
 
 def init_second_half_notification(fixture_item, second_half_result, fixture_id, user_id, notification_id):
-    if not second_half_result:
+    if second_half_result == '':
         return
-    notification_statuses = NotificationStatus.objects.filter(notification_id=notification_id)
-    for notification_status in notification_statuses:
-        if not notification_status:
-            return
-        if not notification_status:
-            return
-        if notification_status.get_notification_status() == info.SENT:
-            return
-        notification_status.set_notification_status(info.SENT)
-        check_if_in_priority(info.FULL_TIME, fixture_id, fixture_item, user_id)
-        break
+    check_if_in_priority(info.FULL_TIME, fixture_id, fixture_item, user_id)
 
 
 def init_match_started(fixture_item, fixture_id, user_id):
