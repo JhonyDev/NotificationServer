@@ -43,22 +43,23 @@ def api_post_notification_priority(request):
 
 
 def test(request):
-    notifications = list(NotificationPriority.objects.all())
-    fixtures = list(Fixtures.objects.all())
-    for notification in notifications:
-        fixture_inserted = False
-        for fixture in fixtures:
-            if fixture.get_fixture_id() == notification.get_fixture_id():
-                fixture_inserted = True
-                continue
-            fixture = Fixtures()
-            fixture.fixture_id = notification.get_fixture_id()
-            fixture.save()
-            fixture_inserted = True
-        if not fixture_inserted:
-            fixture = Fixtures()
-            fixture.fixture_id = notification.get_fixture_id()
-            fixture.save()
+    # notifications = list(NotificationPriority.objects.all())
+    # fixtures = list(Fixtures.objects.all())
+    # for notification in notifications:
+    #     fixture_inserted = False
+    #     for fixture in fixtures:
+    #         if fixture.get_fixture_id() == notification.get_fixture_id():
+    #             fixture_inserted = True
+    #             continue
+    #         fixture = Fixtures()
+    #         fixture.fixture_id = notification.get_fixture_id()
+    #         fixture.save()
+    #         fixture_inserted = True
+    #     if not fixture_inserted:
+    #         fixture = Fixtures()
+    #         fixture.fixture_id = notification.get_fixture_id()
+    #         fixture.save()
+    #
     my_cron_job()
     time_stamp = str(datetime.datetime.now())
     return HttpResponse('Cron Initiated ' + time_stamp)
