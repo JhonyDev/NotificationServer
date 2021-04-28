@@ -59,6 +59,6 @@ def test(request):
             fixture = Fixtures()
             fixture.fixture_id = notification.get_fixture_id()
             fixture.save()
-    my_cron_job(False)
+    my_cron_job()
     time_stamp = str(datetime.datetime.now())
     return HttpResponse('Cron Initiated ' + time_stamp)
