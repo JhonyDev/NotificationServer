@@ -11,7 +11,10 @@ MATCH_STARTED = 'Match Started'
 MATCH_FINISHED = 'Match Finished'
 
 CARD = 'Card'
-GOAL = 'Goal'
 
 YELLOW_CARD = 'Yellow Card'
 RED_CARD = 'Red Card'
+GOAL = 'Goal'
+
+first = 'first'
+not_first = 'not_first'

@@ -4,6 +4,7 @@ from api import info
 
 
 class NotificationPriority(models.Model):
+    first_notification = models.CharField(max_length=10, default=info.first)
     user_id = models.CharField(max_length=250, default='no_user')
     fixture_id = models.IntegerField()
     full_time_result = models.IntegerField()
@@ -14,6 +15,12 @@ class NotificationPriority(models.Model):
     goals = models.IntegerField()
     notification_id = models.CharField(max_length=250, default=0)
     objects = models.Manager()
+
+    def get_first(self):
+        return self.first_notification
+
+    def set_first(self, first_str):
+        self.first_notification = first_str
 
     def get_fixture_id(self):
         return self.fixture_id
@@ -37,6 +44,22 @@ class Fixtures(models.Model):
 
     def get_fixture_id(self):
         return self.fixture_id
+
+
+class NotificationQueue(models.Model):
+    title = models.CharField(max_length=15)
+    subtitle = models.CharField(max_length=30)
+    user = models.CharField(max_length=50)
+    objects = models.Manager()
+
+    def get_title(self):
+        return self.title
+
+    def get_subtitle(self):
+        return self.subtitle
+
+    def get_user(self):
+        return self.user
 
 
 class SentNotification(models.Model):
