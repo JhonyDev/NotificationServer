@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.http import HttpResponse
@@ -59,4 +60,5 @@ def test(request):
             fixture.fixture_id = notification.get_fixture_id()
             fixture.save()
     my_cron_job(False)
-    return HttpResponse('Cron Initiated')
+    time_stamp = str(datetime.datetime.now())
+    return HttpResponse('Cron Initiated ' + time_stamp)
