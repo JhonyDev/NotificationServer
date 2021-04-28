@@ -16,8 +16,8 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
 
     if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
         if is_first_priority == info.first:
-            notification_priority.set_first(info.not_first)
-            notification_priority.save()
+            notification_priority[0].set_first(info.not_first)
+            notification_priority[0].save()
             return
 
     if is_first_priority == info.first:
@@ -26,8 +26,8 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
         queue.subtitle = subtitle
         queue.user = user_id
         queue.save()
-        notification_priority.set_first(info.not_first)
-        notification_priority.save()
+        notification_priority[0].set_first(info.not_first)
+        notification_priority[0].save()
         return
 
     notification = SentNotification()
