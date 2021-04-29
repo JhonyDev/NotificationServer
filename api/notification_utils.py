@@ -5,8 +5,6 @@ import requests
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures
 from api import info
 
-is_first = info.not_first
-
 
 def add_notification_to_queue(notification_type, subtitle, user_id, notification_priority):
     queue = NotificationQueue()
@@ -31,8 +29,6 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
     notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
     if notification:
         return
-
-    global is_first
 
     add_to_sent_notifications(title, subtitle, user_id)
 
@@ -61,6 +57,7 @@ def notify(user_id, title, subtitle):
             }
         }
     )
+    print(response)
 
 
 def full_time_notification(fixture_item, user_id):
@@ -256,12 +253,8 @@ def check_for_updates(fixture_id):
         return
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
-        global is_first
         first_priority = notification_priority.get_first()
-        is_first = first_priority
-        if first_priority == info.first:
-            notification_priority.set_first(info.not_first)
-            notification_priority.save()
+        print('#####--->>>>>' + first_priority)
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
 
     if fixture_item[0].get('status') == 'Match Finished':
