@@ -18,16 +18,18 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
         if is_first_priority == info.first:
             notification_priority[0].set_first(info.not_first)
             notification_priority[0].save()
+            print('First Second and kick off contained')
             return
 
     if is_first_priority == info.first:
         queue = NotificationQueue()
-        queue.title = title
+        queue.title = notification_type
         queue.subtitle = subtitle
         queue.user = user_id
         queue.save()
         notification_priority[0].set_first(info.not_first)
         notification_priority[0].save()
+        print('event notification contained')
         return
 
     notification = SentNotification()
@@ -37,11 +39,12 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
 
     notify(user_id, title, subtitle)
 
-    notification_queue = list(NotificationQueue.objects.filter(title=title, user_id=user_id))
+    notification_queue = list(NotificationQueue.objects.filter(title_tag=notification_type, user_id=user_id))
     for notification in notification_queue:
-        notification_list = SentNotification.objects.filter(title=notification.title, subtitle=notification.subtitle,
-                                                            user=notification.user)
-        if notification_list:
+        notification_list = list(
+            SentNotification.objects.filter(title_tag=notification.title, subtitle=notification.subtitle,
+                                            user=notification.user))
+        if notification_list[0]:
             continue
 
         sent_notification = SentNotification()

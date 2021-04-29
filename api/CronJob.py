@@ -1,7 +1,7 @@
 import datetime
 
 from .models import Fixtures, CronLogs
-from .utils import check_for_updates
+from .notification_utils import check_for_updates
 
 
 def my_cron_job():
