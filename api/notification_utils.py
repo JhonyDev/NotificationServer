@@ -6,15 +6,16 @@ from .models import NotificationPriority, NotificationQueue, SentNotification, F
 from api import info
 
 
-def add_notification_to_queue(notification_type, subtitle, user_id, notification_priority):
-    queue = NotificationQueue()
-    queue.title = notification_type
-    queue.subtitle = subtitle
-    queue.user = user_id
-    queue.save()
-    notification_priority[0].set_first(info.not_first)
-    notification_priority[0].save()
-    print('event notification contained')
+def push_notify(title, subtitle, user_id, notification_type, notification_priority):
+    notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
+    if notification:
+        return
+
+    add_to_sent_notifications(title, subtitle, user_id)
+
+    print('---------->>>> ' + notification_priority.get)
+
+    notify(user_id, title, subtitle)
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
@@ -25,14 +26,15 @@ def add_to_sent_notifications(title, subtitle, user_id):
     notification.save()
 
 
-def push_notify(title, subtitle, user_id, notification_type, notification_priority):
-    notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
-    if notification:
-        return
-
-    add_to_sent_notifications(title, subtitle, user_id)
-
-    notify(user_id, title, subtitle)
+def add_notification_to_queue(notification_type, subtitle, user_id, notification_priority):
+    queue = NotificationQueue()
+    queue.title = notification_type
+    queue.subtitle = subtitle
+    queue.user = user_id
+    queue.save()
+    notification_priority[0].set_first(info.not_first)
+    notification_priority[0].save()
+    print('event notification contained')
 
 
 def notify(user_id, title, subtitle):
@@ -254,6 +256,8 @@ def check_for_updates(fixture_id):
     for notification_priority in notification_priority_list:
         first_priority = notification_priority.get_first()
         print('#####--->>>>>' + first_priority)
+        notification_priority.set_first(info.not_first)
+        notification_priority.save()
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
 
     if fixture_item[0].get('status') == 'Match Finished':
