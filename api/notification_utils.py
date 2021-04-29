@@ -13,7 +13,7 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
 
     add_to_sent_notifications(title, subtitle, user_id)
 
-    print('---------->>>> ' + notification_priority.get)
+    print('---------->>>> ' + notification_priority.get_first())
 
     notify(user_id, title, subtitle)
 
@@ -263,5 +263,3 @@ def check_for_updates(fixture_id):
     if fixture_item[0].get('status') == 'Match Finished':
         fixture = Fixtures.objects.get(fixture_id=fixture_id)
         fixture.delete()
-
-    is_first = info.not_first
