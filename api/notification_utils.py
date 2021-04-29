@@ -33,7 +33,6 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
     add_to_sent_notifications(title, subtitle, user_id)
 
     notify(user_id, title, subtitle)
-    notification[0].save()
 
 
 def notify(user_id, title, subtitle):
