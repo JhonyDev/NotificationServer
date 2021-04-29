@@ -34,36 +34,10 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
 
     global is_first
 
-    if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
-        if is_first == info.first:
-            notification_priority[0].set_first(info.not_first)
-            notification_priority[0].save()
-            print('First Second and kick off contained')
-            return
-        notify(user_id, title, subtitle)
-        return
-
-    if is_first == info.first:
-        add_notification_to_queue(notification_type, subtitle, user_id, notification_priority)
-        return
-
     add_to_sent_notifications(title, subtitle, user_id)
 
     notify(user_id, title, subtitle)
-    notification.save()
-
-    notification_queue = list(NotificationQueue.objects.filter(title_tag=notification_type, user_id=user_id))
-    for notification in notification_queue:
-        notification_list = list(
-            SentNotification.objects.filter(title_tag=notification.title, subtitle=notification.subtitle,
-                                            user=notification.user))
-        if notification_list[0]:
-            continue
-
-        add_to_sent_notifications(notification.title, notification.subtitle, notification.user)
-
-        notify(notification.get_user(), notification.get_title(), notification.get_subtitle())
-        notification.delete()
+    notification[0].save()
 
 
 def notify(user_id, title, subtitle):
