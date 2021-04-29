@@ -8,13 +8,12 @@ from api import info
 
 def push_notify(title, subtitle, user_id, notification_type, notification_priority):
     notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
+    global is_first
+    print('------>>>>>> GLOBAL ' + is_first + ' <<<<<<---------')
     if notification:
         return
 
     add_to_sent_notifications(title, subtitle, user_id)
-
-    global is_first
-    print('------>>>>>> GLOBAL ' + is_first + ' <<<<<<---------')
 
     notify(user_id, title, subtitle)
 
