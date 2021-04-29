@@ -5,6 +5,8 @@ import requests
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures
 from api import info
 
+is_first = info.not_first
+
 
 def add_notification_to_queue(notification_type, subtitle, user_id, notification_priority):
     queue = NotificationQueue()
@@ -257,9 +259,6 @@ def init(fixture_item, user_id, notification_id, fixture_id):
     init_event_notification(fixture_item, fixture_id, user_id)
 
 
-is_first = info.not_first
-
-
 def check_for_updates(fixture_id):
     url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
     headers = {'Accept': 'application/json',
@@ -294,3 +293,5 @@ def check_for_updates(fixture_id):
     if fixture_item[0].get('status') == 'Match Finished':
         fixture = Fixtures.objects.get(fixture_id=fixture_id)
         fixture.delete()
+
+    is_first = info.not_first
