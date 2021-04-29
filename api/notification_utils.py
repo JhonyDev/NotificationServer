@@ -5,39 +5,50 @@ import requests
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures
 from api import info
 
-is_first_priority = info.not_first
+
+def add_notification_to_queue(notification_type, subtitle, user_id, notification_priority):
+    queue = NotificationQueue()
+    queue.title = notification_type
+    queue.subtitle = subtitle
+    queue.user = user_id
+    queue.save()
+    notification_priority[0].set_first(info.not_first)
+    notification_priority[0].save()
+    print('event notification contained')
 
 
-def push_notify(title, subtitle, user_id, notification_type, notification_priority):
-    global is_first_priority
-    notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
-    if notification:
-        return
-
-    if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
-        if is_first_priority == info.first:
-            notification_priority[0].set_first(info.not_first)
-            notification_priority[0].save()
-            print('First Second and kick off contained')
-            return
-
-    if is_first_priority == info.first:
-        queue = NotificationQueue()
-        queue.title = notification_type
-        queue.subtitle = subtitle
-        queue.user = user_id
-        queue.save()
-        notification_priority[0].set_first(info.not_first)
-        notification_priority[0].save()
-        print('event notification contained')
-        return
-
+def add_to_sent_notifications(title, subtitle, user_id):
     notification = SentNotification()
     notification.title = title
     notification.subtitle = subtitle
     notification.user = user_id
+    notification.save()
+
+
+def push_notify(title, subtitle, user_id, notification_type, notification_priority):
+    notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
+    if notification:
+        return
+
+    global is_first
+
+    if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
+        if is_first == info.first:
+            notification_priority[0].set_first(info.not_first)
+            notification_priority[0].save()
+            print('First Second and kick off contained')
+            return
+        notify(user_id, title, subtitle)
+        return
+
+    if is_first == info.first:
+        add_notification_to_queue(notification_type, subtitle, user_id, notification_priority)
+        return
+
+    add_to_sent_notifications(title, subtitle, user_id)
 
     notify(user_id, title, subtitle)
+    notification.save()
 
     notification_queue = list(NotificationQueue.objects.filter(title_tag=notification_type, user_id=user_id))
     for notification in notification_queue:
@@ -47,14 +58,10 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
         if notification_list[0]:
             continue
 
-        sent_notification = SentNotification()
-        sent_notification.title = notification.title
-        sent_notification.subtitle = notification.subtitle
-        sent_notification.user = notification.user
-        sent_notification.save()
-        notify(notification.get_user(), notification.get_title(), notification.get_subtitle())
+        add_to_sent_notifications(notification.title, notification.subtitle, notification.user)
 
-    notification.save()
+        notify(notification.get_user(), notification.get_title(), notification.get_subtitle())
+        notification.delete()
 
 
 def notify(user_id, title, subtitle):
@@ -250,6 +257,9 @@ def init(fixture_item, user_id, notification_id, fixture_id):
     init_event_notification(fixture_item, fixture_id, user_id)
 
 
+is_first = info.not_first
+
+
 def check_for_updates(fixture_id):
     url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
     headers = {'Accept': 'application/json',
@@ -273,9 +283,10 @@ def check_for_updates(fixture_id):
         return
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
-        global is_first_priority
-        is_first_priority = notification_priority.get_first()
-        if is_first_priority:
+        global is_first
+        first_priority = notification_priority.get_first()
+        is_first = first_priority
+        if first_priority == info.first:
             notification_priority.set_first(info.not_first)
             notification_priority.save()
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
