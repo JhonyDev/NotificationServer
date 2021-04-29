@@ -47,16 +47,20 @@ class Fixtures(models.Model):
 
 
 class NotificationQueue(models.Model):
-    title_tag = models.CharField(max_length=70)
+    notification_type = models.CharField(max_length=70)
     subtitle = models.CharField(max_length=70)
     user = models.CharField(max_length=70)
+    title = models.CharField(max_length=50)
     objects = models.Manager()
 
-    def get_title(self):
-        return self.title_tag
+    def get_notification_type(self):
+        return self.notification_type
 
     def get_subtitle(self):
         return self.subtitle
+
+    def get_title(self):
+        return self.title
 
     def get_user(self):
         return self.user
