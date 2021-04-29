@@ -13,6 +13,9 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
 
     add_to_sent_notifications(title, subtitle, user_id)
 
+    global is_first
+    print('------>>>>>> GLOBAL ' + is_first + ' <<<<<<---------')
+
     notify(user_id, title, subtitle)
 
 
@@ -229,6 +232,9 @@ def init(fixture_item, user_id, notification_id, fixture_id):
     init_event_notification(fixture_item, fixture_id, user_id)
 
 
+is_first = info.not_first
+
+
 def check_for_updates(fixture_id):
     url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
     headers = {'Accept': 'application/json',
@@ -256,6 +262,8 @@ def check_for_updates(fixture_id):
         print('#####--->>>>>' + first_priority)
         notification_priority.set_first(info.not_first)
         notification_priority.save()
+        global is_first
+        is_first = notification_priority.get_first()
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
 
     if fixture_item[0].get('status') == 'Match Finished':
