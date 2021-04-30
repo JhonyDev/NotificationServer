@@ -276,7 +276,7 @@ def check_for_updates(fixture_id):
         notification_priority.save()
         global is_first
         is_first = notification_priority.get_first()
-        notification_priority.set_first(info.not_first)
+        notification_priority.update(first_notification=info.not_first)
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
 
     if fixture_item[0].get('status') == 'Match Finished':
