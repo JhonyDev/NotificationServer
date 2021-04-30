@@ -6,6 +6,7 @@ class NotificationPriority(models.Model):
     first_notification = models.CharField(max_length=10, default=info.first)
     user_id = models.CharField(max_length=250, default='no_user')
     fixture_id = models.IntegerField()
+
     full_time_result = models.IntegerField()
     half_time_result = models.IntegerField()
     kick_off = models.IntegerField()
