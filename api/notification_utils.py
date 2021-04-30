@@ -269,14 +269,14 @@ def check_for_updates(fixture_id):
         print('---No Fixture')
         print(fixture_item)
         return
-    notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
+    notification_priority_list = list(NotificationPriority.objects.filter(fixture_id=fixture_id))
     for notification_priority in notification_priority_list:
         first_priority = notification_priority.get_first()
         print('#####--->>>>>' + first_priority)
-        notification_priority.save()
         global is_first
         is_first = notification_priority.get_first()
-        notification_priority.update(first_notification=info.not_first)
+        notification_priority.set_first(info.not_first)
+        notification_priority.save()
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
 
     if fixture_item[0].get('status') == 'Match Finished':
