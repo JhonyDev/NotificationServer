@@ -15,9 +15,9 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
 
     if is_first == info.first:
         if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
-            return
+            pass
         else:
-            add_notification_to_queue(notification_type, subtitle, user_id, notification_priority)
+            add_notification_to_queue(notification_type, subtitle, user_id, title)
     else:
         add_to_sent_notifications(title, subtitle, user_id)
         notify(user_id, title, subtitle)
@@ -40,14 +40,14 @@ def add_to_sent_notifications(title, subtitle, user_id):
     notification.save()
 
 
-def add_notification_to_queue(notification_type, subtitle, user_id, notification_priority):
+def add_notification_to_queue(notification_type, subtitle, user_id, title):
     queue = NotificationQueue()
-    queue.title = notification_type
+    queue.notification_type = notification_type
+    queue.title = title
     queue.subtitle = subtitle
     queue.user = user_id
     queue.save()
-    notification_priority[0].set_first(info.not_first)
-    notification_priority[0].save()
+
     print('event notification contained')
 
 
