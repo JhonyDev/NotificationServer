@@ -275,7 +275,7 @@ def check_for_updates(fixture_id):
         print('#####--->>>>>' + first_priority)
         global is_first
         is_first = notification_priority.get_first()
-        update = NotificationPriority.objects.get(priority_id=notification_priority.get_priority_id())
+        update = NotificationPriority.objects.get(pk=notification_priority.pk)
         update.first_notification = info.not_first
         update.save()
         init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
