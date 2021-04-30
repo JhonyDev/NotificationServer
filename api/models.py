@@ -23,9 +23,6 @@ class NotificationPriority(models.Model):
     def get_first(self):
         return self.first_notification
 
-    def set_first(self, first_str):
-        self.first_notification = first_str
-
     def get_fixture_id(self):
         return self.fixture_id
 
