@@ -269,7 +269,7 @@ def check_for_updates(fixture_id):
         print('---No Fixture')
         print(fixture_item)
         return
-    notification_priority_list = list(NotificationPriority.objects.filter(fixture_id=fixture_id))
+    notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
         first_priority = notification_priority.get_first()
         print('#####--->>>>>' + first_priority)
