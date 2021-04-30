@@ -248,11 +248,6 @@ def init(fixture_item, user_id, notification_id, fixture_id):
 is_first = info.not_first
 
 
-def callable_function():
-    no = NotificationPriority.objects.count()
-    return no + 1
-
-
 def check_for_updates(fixture_id):
     url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
     headers = {'Accept': 'application/json',

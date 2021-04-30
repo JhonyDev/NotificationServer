@@ -1,10 +1,9 @@
 from django.db import models
-from .notification_utils import callable_function
 from api import info
 
 
 class NotificationPriority(models.Model):
-    id = models.AutoField(primary_key=True, default=callable_function())
+    id = models.AutoField(primary_key=True, default='')
     first_notification = models.CharField(max_length=10, default=info.first)
     user_id = models.CharField(max_length=250, default='no_user')
     fixture_id = models.IntegerField()
