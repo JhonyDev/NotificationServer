@@ -5,6 +5,7 @@ from api import info
 
 
 class NotificationPriority(models.Model):
+    id = models.AutoField(primary_key=True)
     first_notification = models.CharField(max_length=10, default=info.first)
     user_id = models.CharField(max_length=250, default='no_user')
     fixture_id = models.IntegerField()
