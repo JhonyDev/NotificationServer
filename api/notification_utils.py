@@ -15,6 +15,7 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
 
     if is_first == info.first:
         if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
+            add_to_sent_notifications(title, subtitle, user_id)
             pass
         else:
             add_notification_to_queue(notification_type, subtitle, user_id, title)
