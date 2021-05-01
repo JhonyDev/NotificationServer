@@ -21,15 +21,20 @@ def push_notify(title, subtitle, user_id, notification_type, notification_priori
     else:
         add_to_sent_notifications(title, subtitle, user_id)
         notify(user_id, title, subtitle)
-        notification_queues = list(
-            NotificationQueue.objects.filter(notification_type=notification_type, user=user_id))
-        for notification_queue in notification_queues:
-            notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
-            if notification:
-                return
-            add_to_sent_notifications(notification_queue.get_title(), notification_queue.get_subtitle(),
-                                      notification_queue.get_user())
-            notify(notification_queue.get_user(), notification_queue.get_title(), notification_queue.get_subtitle(), )
+        if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
+            pass
+        else:
+            add_notification_to_queue(notification_type, subtitle, user_id, title)
+            notification_queues = list(
+                NotificationQueue.objects.filter(notification_type=notification_type, user=user_id))
+            for notification_queue in notification_queues:
+                notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
+                if notification:
+                    return
+                add_to_sent_notifications(notification_queue.get_title(), notification_queue.get_subtitle(),
+                                          notification_queue.get_user())
+                notify(notification_queue.get_user(), notification_queue.get_title(),
+                       notification_queue.get_subtitle(), )
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
