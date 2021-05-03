@@ -7,7 +7,7 @@ from api import info
 
 
 def push_notify(title, subtitle, user_id, notification_type):
-    notification = SentNotification.objects.get(title=title, subtitle=subtitle, user=user_id)
+    notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
     global is_first
     print('------>>>>>> GLOBAL ' + is_first + ' <<<<<<---------')
     if notification:
