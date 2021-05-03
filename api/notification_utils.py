@@ -23,8 +23,8 @@ def push_notify(title, subtitle, user_id, notification_type):
             add_notification_to_queue(notification_type, subtitle, user_id, title)
     else:
         print('published notification')
-        add_to_sent_notifications(title, subtitle, user_id)
         notify(user_id, title, subtitle)
+        add_to_sent_notifications(title, subtitle, user_id)
         if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
             pass
         else:
@@ -81,6 +81,7 @@ def notify(user_id, title, subtitle):
             }
         }
     )
+    print(user_id)
     print(response)
 
 
