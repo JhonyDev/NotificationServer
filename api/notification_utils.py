@@ -193,7 +193,7 @@ def check_if_in_priority(param, fixture_id, fixture_item, user_id):
                 red_card_notification(fixture_item, user_id)
 
         if param == info.YELLOW_CARDS:
-            if notification_priority.get_half_yellow_cards() == 1:
+            if notification_priority.get_yellow_cards() == 1:
                 fixture_item['yellowCards'] = fixture_item.get('yellowCards', 0) + 1
                 yellow_card_notification(fixture_item, user_id)
 
