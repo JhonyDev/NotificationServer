@@ -107,6 +107,7 @@ def half_time_notification(fixture_item, user_id):
         notification.delete()
 
 
+
 def kick_off_notification(fixture_item, user_id):
     notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
     if fixture_item.get('elapsed') < 2 and fixture_item.get('status') == 'Match Started':
