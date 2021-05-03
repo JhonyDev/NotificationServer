@@ -38,6 +38,8 @@ def api_post_notification_priority(request):
         fixture = Fixtures()
         fixture.fixture_id = notification_priority.get_fixture_id()
         fixture.save()
+        print(notification_priority.get_user_id())
+        print(notification_priority)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
