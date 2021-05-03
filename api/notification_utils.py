@@ -11,20 +11,24 @@ def push_notify(title, subtitle, user_id, notification_type):
     global is_first
     print('------>>>>>> GLOBAL ' + is_first + ' <<<<<<---------')
     if notification:
+        print('notification already sent')
         return
 
     if is_first == info.first:
         if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
+            print('first so not sent')
             add_to_sent_notifications(title, subtitle, user_id)
         else:
+            print('Added event to queue')
             add_notification_to_queue(notification_type, subtitle, user_id, title)
     else:
+        print('published notification')
         add_to_sent_notifications(title, subtitle, user_id)
         notify(user_id, title, subtitle)
         if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
             pass
         else:
-            add_notification_to_queue(notification_type, subtitle, user_id, title)
+            print('sending notifications in queue')
             notification_queues = list(
                 NotificationQueue.objects.filter(notification_type=notification_type, user=user_id))
             for notification_queue in notification_queues:
