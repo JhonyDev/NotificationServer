@@ -27,8 +27,23 @@ class NotificationPriority(models.Model):
     def get_notification_id(self):
         return self.notification_id
 
+    def get_full_time_result(self):
+        return self.full_time_result
+
     def get_half_time_result(self):
         return self.half_time_result
+
+    def get_kick_off(self):
+        return self.kick_off
+
+    def get_red_cards(self):
+        return self.red_cards
+
+    def get_yellow_cards(self):
+        return self.yellow_cards
+
+    def get_goals(self):
+        return self.goals
 
     def __int__(self):
         return self.fixture_id
