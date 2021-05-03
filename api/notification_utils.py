@@ -82,34 +82,36 @@ def notify(user_id, title, subtitle):
 
 def full_time_notification(fixture_item, user_id):
     notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
-    if fixture_item.get('status') == info.MATCH_FINISHED:
+    print('-------->>>>>>>>>' + fixture_item.get('score').get('fulltime'))
+    if fixture_item.get('score').get('halftime') is not None and fixture_item.get('elapsed') < (90 / 2) + 2:
+        title = 'Full Time'
+        subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
+        subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
+        push_notify(title, subtitle, user_id, info.FULL_TIME)
+    else:
         notification.delete()
-        return
-    title = 'Full Time'
-    subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
-    subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
-    push_notify(title, subtitle, user_id, info.FULL_TIME)
 
 
 def half_time_notification(fixture_item, user_id):
     notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
-    if fixture_item.get('status') == info.MATCH_FINISHED:
+    print('-------->>>>>>>>>' + fixture_item.get('score').get('halftime'))
+    if fixture_item.get('score').get('halftime') is not None and fixture_item.get('elapsed') < (90 / 2) + 2:
+        title = 'Half Time'
+        subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
+        subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
+        push_notify(title, subtitle, user_id, info.HALF_TIME)
+    else:
         notification.delete()
-        return
-    title = 'Half Time'
-    subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
-    subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
-    push_notify(title, subtitle, user_id, info.HALF_TIME)
 
 
 def kick_off_notification(fixture_item, user_id):
     notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
-    if fixture_item.get('status') == info.MATCH_FINISHED:
+    if fixture_item.get('elapsed') < 2 and fixture_item.get('status') == 'Match Started':
+        title = 'Kick Off'
+        subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+        push_notify(title, subtitle, user_id, info.KICK_OFF)
+    else:
         notification.delete()
-        return
-    title = 'Kick Off'
-    subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    push_notify(title, subtitle, user_id, info.KICK_OFF)
 
 
 def red_card_notification(fixture_item, user_id):
