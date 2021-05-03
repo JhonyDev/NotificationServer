@@ -87,7 +87,7 @@ def notify(user_id, title, subtitle):
 
 def full_time_notification(fixture_item, user_id):
     notification = NotificationPriority.objects.filter(fixture_id=fixture_item.get('fixture_id'), user_id=user_id)
-    if fixture_item.get('score').get('halftime') is not None and fixture_item.get('elapsed') < (90 / 2) + 2:
+    if fixture_item.get('score').get('fulltime') is not None and fixture_item.get('elapsed') < (90 / 2) + 2:
         title = 'Full Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
         subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
@@ -203,24 +203,6 @@ def check_if_in_priority(param, fixture_id, fixture_item, user_id):
         break
 
 
-def init_first_half_notification(fixture_item, first_half, fixture_id, user_id):
-    if first_half == '':
-        return
-    if (90 / 2 + 6) > int(fixture_item['elapsed']) > (90 / 2):
-        check_if_in_priority(info.HALF_TIME, fixture_id, fixture_item, user_id)
-
-
-def init_second_half_notification(fixture_item, second_half_result, fixture_id, user_id, notification_id):
-    if second_half_result == '':
-        return
-    check_if_in_priority(info.FULL_TIME, fixture_id, fixture_item, user_id)
-
-
-def init_match_started(fixture_item, fixture_id, user_id):
-    if fixture_item.get('elapsed') < 6 and fixture_item.get('status') == info.MATCH_STARTED:
-        check_if_in_priority(info.KICK_OFF, fixture_id, fixture_item, user_id)
-
-
 def init_event_notification(fixture_item, fixture_id, user_id):
     events_list = fixture_item.get('events')
     if not events_list:
@@ -236,16 +218,12 @@ def init_event_notification(fixture_item, fixture_id, user_id):
             check_if_in_priority(info.GOALS, fixture_id, fixture_item, user_id)
 
 
-def init(fixture_item, user_id, notification_id, fixture_id):
+def init(fixture_item, user_id, fixture_id):
     fixture_item = fixture_item[0]
-    first_half_result = fixture_item['score'].get('halftime', '')
-    second_half_result = fixture_item['score'].get('fulltime', '')
 
-    init_first_half_notification(fixture_item, first_half_result, fixture_id, user_id)
-
-    init_second_half_notification(fixture_item, second_half_result, fixture_id, user_id, notification_id)
-
-    init_match_started(fixture_item, fixture_id, user_id)
+    check_if_in_priority(info.HALF_TIME, fixture_id, fixture_item, user_id)
+    check_if_in_priority(info.FULL_TIME, fixture_id, fixture_item, user_id)
+    check_if_in_priority(info.KICK_OFF, fixture_id, fixture_item, user_id)
 
     if fixture_item.get('events', '') == '':
         print('---No events')
@@ -284,7 +262,7 @@ def check_for_updates(fixture_id):
         print('#####--->>>>>' + first_priority)
         global is_first
         is_first = notification_priority.get_first()
-        init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id(), fixture_id)
+        init(fixture_item, notification_priority.get_user_id(), notification_priority.get_notification_id())
         notification_priority.first_notification = info.not_first
         notification_priority.save()
 
