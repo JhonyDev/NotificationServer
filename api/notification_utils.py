@@ -32,7 +32,9 @@ def push_notify(title, subtitle, user_id, notification_type):
             notification_queues = list(
                 NotificationQueue.objects.filter(notification_type=notification_type, user=user_id))
             for notification_queue in notification_queues:
-                notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
+                notification = SentNotification.objects.filter(title=notification_queue.get_title(),
+                                                               subtitle=notification_queue.get_subtitle(),
+                                                               user=notification_queue.get_user())
                 if notification:
                     return
                 add_to_sent_notifications(notification_queue.get_title(), notification_queue.get_subtitle(),
