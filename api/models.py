@@ -62,7 +62,7 @@ class NotificationQueue(models.Model):
     subtitle = models.CharField(max_length=70)
     user = models.CharField(max_length=70)
     title = models.CharField(max_length=50, default='-')
-    fixture = models.CharField(max_length=20)
+    fixture = models.CharField(max_length=20, default='-')
     objects = models.Manager()
 
     def get_notification_type(self):
