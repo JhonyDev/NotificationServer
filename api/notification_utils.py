@@ -20,7 +20,8 @@ def push_notify(title, subtitle, user_id, notification_type, fixture):
             add_to_sent_notifications(title, subtitle, user_id)
         else:
             print('Added event to queue')
-            add_notification_to_queue(notification_type, subtitle, user_id, title, fixture)
+            add_to_sent_notifications(title, subtitle, user_id)
+            # add_notification_to_queue(notification_type, subtitle, user_id, title, fixture)
     else:
         print('published notification')
         notify(user_id, title, subtitle)
