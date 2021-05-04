@@ -111,6 +111,7 @@ def kick_off_notification(fixture_item, user_id):
 def red_card_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+    title = ''
     for event in events:
         if event.get('detail') == info.RED_CARD:
             elapsed_time = str(event.get('elapsed'))
@@ -118,12 +119,14 @@ def red_card_notification(fixture_item, user_id):
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
                 continue
-            push_notify(title, subtitle, user_id, info.RED_CARDS)
+            break
+    push_notify(title, subtitle, user_id, info.RED_CARDS)
 
 
 def yellow_card_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+    title = ''
     for event in events:
         if event.get('detail') == info.YELLOW_CARD:
             elapsed_time = str(event.get('elapsed'))
@@ -131,12 +134,14 @@ def yellow_card_notification(fixture_item, user_id):
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
                 continue
-            push_notify(title, subtitle, user_id, info.YELLOW_CARDS)
+            break
+    push_notify(title, subtitle, user_id, info.YELLOW_CARDS)
 
 
 def goal_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+    title = ''
     for event in events:
         if event.get('type') == info.GOAL:
             elapsed_time = str(event.get('elapsed'))
@@ -144,7 +149,9 @@ def goal_notification(fixture_item, user_id):
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
                 continue
-            push_notify(title, subtitle, user_id, info.GOALS)
+            break
+
+    push_notify(title, subtitle, user_id, info.GOALS)
 
 
 def check_if_in_priority(param, fixture_id, fixture_item, user_id):
