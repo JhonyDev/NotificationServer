@@ -62,10 +62,14 @@ class NotificationQueue(models.Model):
     subtitle = models.CharField(max_length=70)
     user = models.CharField(max_length=70)
     title = models.CharField(max_length=50, default='-')
+    fixture = models.CharField(max_length=20)
     objects = models.Manager()
 
     def get_notification_type(self):
         return self.notification_type
+
+    def get_fixture(self):
+        return self.fixture
 
     def get_subtitle(self):
         return self.subtitle

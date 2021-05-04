@@ -6,7 +6,7 @@ from .models import NotificationPriority, NotificationQueue, SentNotification, F
 from api import info
 
 
-def push_notify(title, subtitle, user_id, notification_type):
+def push_notify(title, subtitle, user_id, notification_type, fixture):
     notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
     global is_first
     print('------>>>>>> GLOBAL ' + is_first + ' <<<<<<---------')
@@ -20,7 +20,7 @@ def push_notify(title, subtitle, user_id, notification_type):
             add_to_sent_notifications(title, subtitle, user_id)
         else:
             print('Added event to queue')
-            add_notification_to_queue(notification_type, subtitle, user_id, title)
+            add_notification_to_queue(notification_type, subtitle, user_id, title, fixture)
     else:
         print('published notification')
         notify(user_id, title, subtitle)
@@ -30,7 +30,7 @@ def push_notify(title, subtitle, user_id, notification_type):
         else:
             print('sending notifications in queue')
             notification_queues = list(
-                NotificationQueue.objects.filter(notification_type=notification_type, user=user_id))
+                NotificationQueue.objects.filter(notification_type=notification_type, user=user_id, fixture=fixture))
             for notification_queue in notification_queues:
                 notification = SentNotification.objects.filter(title=notification_queue.get_title(),
                                                                subtitle=notification_queue.get_subtitle(),
@@ -51,10 +51,11 @@ def add_to_sent_notifications(title, subtitle, user_id):
     notification.save()
 
 
-def add_notification_to_queue(notification_type, subtitle, user_id, title):
+def add_notification_to_queue(notification_type, subtitle, user_id, title, fixture):
     queue = NotificationQueue()
     queue.notification_type = notification_type
     queue.title = title
+    queue.fixture = fixture
     queue.subtitle = subtitle
     queue.user = user_id
     queue.save()
@@ -93,7 +94,7 @@ def full_time_notification(fixture_item, user_id):
         title = 'Full Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
-        push_notify(title, subtitle, user_id, info.FULL_TIME)
+        push_notify(title, subtitle, user_id, info.FULL_TIME, fixture_item.get('fixture_id'))
 
 
 def half_time_notification(fixture_item, user_id):
@@ -102,14 +103,14 @@ def half_time_notification(fixture_item, user_id):
         title = 'Half Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
-        push_notify(title, subtitle, user_id, info.HALF_TIME)
+        push_notify(title, subtitle, user_id, info.HALF_TIME, fixture_item.get('fixture_id'))
 
 
 def kick_off_notification(fixture_item, user_id):
     if fixture_item.get('elapsed') < 2 and fixture_item.get('status') == 'Match Started':
         title = 'Kick Off'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-        push_notify(title, subtitle, user_id, info.KICK_OFF)
+        push_notify(title, subtitle, user_id, info.KICK_OFF, fixture_item.get('fixture_id'))
 
 
 def red_card_notification(fixture_item, user_id):
@@ -124,7 +125,7 @@ def red_card_notification(fixture_item, user_id):
             if sent_notification:
                 continue
             break
-    push_notify(title, subtitle, user_id, info.RED_CARDS)
+    push_notify(title, subtitle, user_id, info.RED_CARDS, fixture_item.get('fixture_id'))
 
 
 def yellow_card_notification(fixture_item, user_id):
@@ -139,7 +140,7 @@ def yellow_card_notification(fixture_item, user_id):
             if sent_notification:
                 continue
             break
-    push_notify(title, subtitle, user_id, info.YELLOW_CARDS)
+    push_notify(title, subtitle, user_id, info.YELLOW_CARDS, fixture_item.get('fixture_id'))
 
 
 def goal_notification(fixture_item, user_id):
@@ -155,7 +156,7 @@ def goal_notification(fixture_item, user_id):
                 continue
             break
 
-    push_notify(title, subtitle, user_id, info.GOALS)
+    push_notify(title, subtitle, user_id, info.GOALS, fixture_item.get('fixture_id'))
 
 
 def check_if_in_priority(param, fixture_id, fixture_item, user_id):
