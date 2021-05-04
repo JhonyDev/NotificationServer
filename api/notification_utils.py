@@ -86,7 +86,7 @@ def notify(user_id, title, subtitle):
 
 
 def full_time_notification(fixture_item, user_id):
-    if fixture_item.get('score').get('fulltime') is not None and fixture_item.get('elapsed') < (90 / 2) + 2:
+    if fixture_item.get('score').get('fulltime') is not None:
         title = 'Full Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
         subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
@@ -94,7 +94,7 @@ def full_time_notification(fixture_item, user_id):
 
 
 def half_time_notification(fixture_item, user_id):
-    if fixture_item.get('score').get('halftime') is not None and fixture_item.get('elapsed') < (90 / 2) + 2:
+    if fixture_item.get('score').get('halftime') is not None:
         title = 'Half Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('goalsHomeTeam'))
         subtitle += '-' + str(fixture_item.get('goalsAwayTeam')) + ' ' + fixture_item.get('awayTeam').get('team_name')
