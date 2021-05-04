@@ -26,22 +26,22 @@ def push_notify(title, subtitle, user_id, notification_type, fixture):
         print('published notification')
         notify(user_id, title, subtitle)
         add_to_sent_notifications(title, subtitle, user_id)
-        if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
-            pass
-        else:
-            print('sending notifications in queue')
-            notification_queues = list(
-                NotificationQueue.objects.filter(notification_type=notification_type, user=user_id, fixture=fixture))
-            for notification_queue in notification_queues:
-                notification = SentNotification.objects.filter(title=notification_queue.get_title(),
-                                                               subtitle=notification_queue.get_subtitle(),
-                                                               user=notification_queue.get_user())
-                if notification:
-                    return
-                add_to_sent_notifications(notification_queue.get_title(), notification_queue.get_subtitle(),
-                                          notification_queue.get_user())
-                notify(notification_queue.get_user(), notification_queue.get_title(),
-                       notification_queue.get_subtitle(), )
+        # if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
+        #     pass
+        # else:
+        #     print('sending notifications in queue')
+        #     notification_queues = list(
+        #         NotificationQueue.objects.filter(notification_type=notification_type, user=user_id, fixture=fixture))
+        #     for notification_queue in notification_queues:
+        #         notification = SentNotification.objects.filter(title=notification_queue.get_title(),
+        #                                                        subtitle=notification_queue.get_subtitle(),
+        #                                                        user=notification_queue.get_user())
+        #         if notification:
+        #             return
+        #         add_to_sent_notifications(notification_queue.get_title(), notification_queue.get_subtitle(),
+        #                                   notification_queue.get_user())
+        #         notify(notification_queue.get_user(), notification_queue.get_title(),
+        #                notification_queue.get_subtitle(), )
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
