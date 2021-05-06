@@ -82,9 +82,9 @@ class NotificationQueue(models.Model):
 
 
 class SentNotification(models.Model):
-    title = models.CharField(max_length=50)
-    subtitle = models.CharField(max_length=50)
-    user = models.CharField(max_length=50)
+    title = models.CharField(max_length=100)
+    subtitle = models.CharField(max_length=100)
+    user = models.CharField(max_length=100)
     objects = models.Manager()
 
     def get_title(self):
