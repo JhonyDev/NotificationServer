@@ -2,6 +2,7 @@ import datetime
 
 from .models import Fixtures, CronLogs
 from .notification_utils import check_for_updates
+import time
 
 
 def my_cron_job():
@@ -17,3 +18,9 @@ def run_cron():
     cron_log = CronLogs()
     cron_log.log_time = time_stamp
     cron_log.save()
+
+    time.sleep(20)
+    my_cron_job()
+
+    time.sleep(20)
+    my_cron_job()

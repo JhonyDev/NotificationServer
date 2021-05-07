@@ -100,7 +100,7 @@ def full_time_notification(fixture_item, user_id):
 
 def half_time_notification(fixture_item, user_id):
     print(fixture_item.get('score'))
-    if fixture_item.get('score').get('halftime') is not None:
+    if fixture_item.get('elapsed') > 45:
         title = 'Half Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
@@ -108,7 +108,7 @@ def half_time_notification(fixture_item, user_id):
 
 
 def kick_off_notification(fixture_item, user_id):
-    if fixture_item.get('elapsed') < 2 and fixture_item.get('status') == 'Match Started':
+    if fixture_item.get('elapsed') < 2:
         title = 'Kick Off'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
         push_notify(title, subtitle, user_id, info.KICK_OFF, fixture_item.get('fixture_id'))
@@ -249,9 +249,9 @@ def check_for_updates(fixture_id):
         print('#####--->>>>>' + first_priority)
         global is_first
         is_first = notification_priority.get_first()
-        init(fixture_item, notification_priority.get_user_id(), fixture_id)
         notification_priority.first_notification = info.not_first
         notification_priority.save()
+        init(fixture_item, notification_priority.get_user_id(), fixture_id)
 
     if fixture_item[0].get('status') == 'Match Finished':
         fixture = Fixtures.objects.get(fixture_id=fixture_id)
