@@ -5,6 +5,8 @@ import requests
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures
 from api import info
 
+is_first = info.not_first
+
 
 def push_notify(title, subtitle, user_id, notification_type, fixture):
     notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
@@ -91,7 +93,7 @@ def notify(user_id, title, subtitle):
 
 def full_time_notification(fixture_item, user_id):
     print(fixture_item.get('score'))
-    if fixture_item.get('score').get('fulltime') is not None:
+    if fixture_item.get('score').get('fulltime', None) is not None:
         title = 'Full Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
@@ -100,7 +102,7 @@ def full_time_notification(fixture_item, user_id):
 
 def half_time_notification(fixture_item, user_id):
     print(fixture_item.get('score'))
-    if fixture_item.get('elapsed') > 45:
+    if fixture_item.get('elapsed') >= 45:
         title = 'Half Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
@@ -108,7 +110,7 @@ def half_time_notification(fixture_item, user_id):
 
 
 def kick_off_notification(fixture_item, user_id):
-    if fixture_item.get('elapsed') < 2:
+    if fixture_item.get('elapsed') >= 0:
         title = 'Kick Off'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
         push_notify(title, subtitle, user_id, info.KICK_OFF, fixture_item.get('fixture_id'))
@@ -117,7 +119,6 @@ def kick_off_notification(fixture_item, user_id):
 def red_card_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    title = ''
     for event in events:
         if event.get('detail') == info.RED_CARD:
             elapsed_time = str(event.get('elapsed'))
@@ -125,14 +126,13 @@ def red_card_notification(fixture_item, user_id):
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
                 continue
+            push_notify(title, subtitle, user_id, info.RED_CARDS, fixture_item.get('fixture_id'))
             break
-    push_notify(title, subtitle, user_id, info.RED_CARDS, fixture_item.get('fixture_id'))
 
 
 def yellow_card_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    title = ''
     for event in events:
         if event.get('detail') == info.YELLOW_CARD:
             elapsed_time = str(event.get('elapsed'))
@@ -140,14 +140,13 @@ def yellow_card_notification(fixture_item, user_id):
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
                 continue
+            push_notify(title, subtitle, user_id, info.YELLOW_CARDS, fixture_item.get('fixture_id'))
             break
-    push_notify(title, subtitle, user_id, info.YELLOW_CARDS, fixture_item.get('fixture_id'))
 
 
 def goal_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
-    title = ''
     for event in events:
         if event.get('type') == info.GOAL:
             elapsed_time = str(event.get('elapsed'))
@@ -155,9 +154,8 @@ def goal_notification(fixture_item, user_id):
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
                 continue
+            push_notify(title, subtitle, user_id, info.GOALS, fixture_item.get('fixture_id'))
             break
-
-    push_notify(title, subtitle, user_id, info.GOALS, fixture_item.get('fixture_id'))
 
 
 def check_if_in_priority(param, fixture_id, fixture_item, user_id):
@@ -194,32 +192,15 @@ def check_if_in_priority(param, fixture_id, fixture_item, user_id):
         break
 
 
-def init_event_notification(fixture_item, fixture_id, user_id):
-    events_list = fixture_item.get('events')
-    if not events_list:
-        return
-
-    for event in events_list:
-        if event.get('type') == info.CARD:
-            if event.get('detail') == info.YELLOW_CARD:
-                check_if_in_priority(info.YELLOW_CARDS, fixture_id, fixture_item, user_id)
-            if event.get('detail') == info.RED_CARD:
-                check_if_in_priority(info.RED_CARDS, fixture_id, fixture_item, user_id)
-        if event.get('type') == info.GOAL:
-            check_if_in_priority(info.GOALS, fixture_id, fixture_item, user_id)
-
-
 def init(fixture_item, user_id, fixture_id):
     fixture_item = fixture_item[0]
 
     check_if_in_priority(info.HALF_TIME, fixture_id, fixture_item, user_id)
     check_if_in_priority(info.FULL_TIME, fixture_id, fixture_item, user_id)
     check_if_in_priority(info.KICK_OFF, fixture_id, fixture_item, user_id)
-
-    init_event_notification(fixture_item, fixture_id, user_id)
-
-
-is_first = info.not_first
+    check_if_in_priority(info.YELLOW_CARDS, fixture_id, fixture_item, user_id)
+    check_if_in_priority(info.RED_CARDS, fixture_id, fixture_item, user_id)
+    check_if_in_priority(info.GOALS, fixture_id, fixture_item, user_id)
 
 
 def check_for_updates(fixture_id):
