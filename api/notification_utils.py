@@ -110,7 +110,7 @@ def half_time_notification(fixture_item, user_id):
 
 
 def kick_off_notification(fixture_item, user_id):
-    if fixture_item.get('elapsed') >= 0:
+    if 0 <= fixture_item.get('elapsed') <= 5:
         title = 'Kick Off'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
         push_notify(title, subtitle, user_id, info.KICK_OFF, fixture_item.get('fixture_id'))
