@@ -102,7 +102,7 @@ def full_time_notification(fixture_item, user_id):
 
 def half_time_notification(fixture_item, user_id):
     print(fixture_item.get('score'))
-    if fixture_item.get('elapsed') >= 45:
+    if fixture_item['elapsed'] >= 45:
         title = 'Half Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
@@ -112,7 +112,8 @@ def half_time_notification(fixture_item, user_id):
 def kick_off_notification(fixture_item, user_id):
     if 0 <= fixture_item.get('elapsed') <= 5:
         title = 'Kick Off'
-        subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+        subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get(
+            'team_name')
         push_notify(title, subtitle, user_id, info.KICK_OFF, fixture_item.get('fixture_id'))
 
 
@@ -127,9 +128,9 @@ def red_card_notification(fixture_item, user_id):
             title = 'RED CARD - ' + elapsed_time + ' min'
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
-                continue
-            push_notify(title, subtitle, user_id, info.RED_CARDS, fixture_item.get('fixture_id'))
-            break
+                pass
+            else:
+                push_notify(title, subtitle, user_id, info.RED_CARDS, fixture_item.get('fixture_id'))
 
 
 def yellow_card_notification(fixture_item, user_id):
@@ -143,9 +144,9 @@ def yellow_card_notification(fixture_item, user_id):
             title = 'Yellow Card - ' + elapsed_time + ' min'
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
-                continue
-            push_notify(title, subtitle, user_id, info.YELLOW_CARDS, fixture_item.get('fixture_id'))
-            break
+                pass
+            else:
+                push_notify(title, subtitle, user_id, info.YELLOW_CARDS, fixture_item.get('fixture_id'))
 
 
 def goal_notification(fixture_item, user_id):
@@ -156,14 +157,15 @@ def goal_notification(fixture_item, user_id):
         return
 
     for event in events:
-        if event.get('type') == info.GOAL:
+        if event.get('type') == 'Goal':
+            print(event)
             elapsed_time = str(event.get('elapsed'))
             title = 'Goal - ' + elapsed_time + ' min'
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
             if sent_notification:
-                continue
-            push_notify(title, subtitle, user_id, info.GOALS, fixture_item.get('fixture_id'))
-            break
+                pass
+            else:
+                push_notify(title, subtitle, user_id, info.GOALS, fixture_item.get('fixture_id'))
 
 
 def check_if_in_priority(param, fixture_id, fixture_item, user_id):
