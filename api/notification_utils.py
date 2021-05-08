@@ -119,6 +119,8 @@ def kick_off_notification(fixture_item, user_id):
 def red_card_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+    if events is None:
+        return
     for event in events:
         if event.get('detail') == info.RED_CARD:
             elapsed_time = str(event.get('elapsed'))
@@ -133,6 +135,8 @@ def red_card_notification(fixture_item, user_id):
 def yellow_card_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+    if events is None:
+        return
     for event in events:
         if event.get('detail') == info.YELLOW_CARD:
             elapsed_time = str(event.get('elapsed'))
@@ -147,6 +151,10 @@ def yellow_card_notification(fixture_item, user_id):
 def goal_notification(fixture_item, user_id):
     events = fixture_item.get('events')
     subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get('team_name')
+
+    if events is None:
+        return
+
     for event in events:
         if event.get('type') == info.GOAL:
             elapsed_time = str(event.get('elapsed'))
