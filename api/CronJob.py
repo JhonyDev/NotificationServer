@@ -19,8 +19,17 @@ def run_cron():
     cron_log.log_time = time_stamp
     cron_log.save()
 
-    time.sleep(20)
+    time.sleep(10)
     my_cron_job()
 
-    time.sleep(20)
+    time.sleep(10)
+    my_cron_job()
+
+    time.sleep(10)
+    my_cron_job()
+
+    time.sleep(10)
+    my_cron_job()
+
+    time.sleep(10)
     my_cron_job()
