@@ -142,7 +142,7 @@ def yellow_card_notification(fixture_item, user_id):
         if event.get('detail') == info.YELLOW_CARD:
             elapsed_time = str(event.get('elapsed'))
             title = 'Yellow Card - ' + elapsed_time + ' min'
-            sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
+            sent_notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
             if sent_notification:
                 pass
             else:
@@ -161,7 +161,7 @@ def goal_notification(fixture_item, user_id):
             print(event)
             elapsed_time = str(event.get('elapsed'))
             title = 'Goal - ' + elapsed_time + ' min'
-            sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
+            sent_notification = SentNotification.objects.get(title=title, subtitle=subtitle, user=user_id)
             if sent_notification:
                 pass
             else:
