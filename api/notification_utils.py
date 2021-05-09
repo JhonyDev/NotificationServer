@@ -161,7 +161,7 @@ def goal_notification(fixture_item, user_id):
             print(event)
             elapsed_time = str(event.get('elapsed'))
             title = 'Goal - ' + elapsed_time + ' min'
-            sent_notification = SentNotification.objects.get(title=title, subtitle=subtitle, user=user_id)
+            sent_notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
             if sent_notification:
                 pass
             else:
