@@ -95,7 +95,7 @@ def full_time_notification(fixture_item, user_id):
     print(fixture_item.get('score'))
     if fixture_item.get('score').get('fulltime', None) is not None:
         title = 'Full Time'
-        subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
+        subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('fulltime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
         push_notify(title, subtitle, user_id, info.FULL_TIME, fixture_item.get('fixture_id'))
 
