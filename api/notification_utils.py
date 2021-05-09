@@ -214,10 +214,10 @@ def init(fixture_item, user_id, fixture_id):
 
 
 def check_for_updates(fixture_id):
-    url = 'https://api-football-v1.p.rapidapi.com/v2/fixtures/id/' + str(fixture_id)
+    url = 'https://v2.api-football.com/fixtures/id/' + str(fixture_id)
     headers = {'Accept': 'application/json',
                'content-type': 'application/json',
-               'x-rapidapi-key': '9bc6e8bddamshfc5efe4660335c5p1254e0jsnb8f0b64ef59e',
+               'x-apisports-key': 'af4532daada823806464862dc4e8e435',
                'x-rapidapi-host': 'api-football-v1.p.rapidapi.com'}
 
     r = requests.get(url, headers=headers)
