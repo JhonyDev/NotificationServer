@@ -21,11 +21,6 @@ def run_cron_with(delay):
 
 
 def run_cron():
-    time_stamp = str(datetime.datetime.now())
-    cron_log = CronLogs()
-    cron_log.log_time = time_stamp
-    cron_log.save()
-
     my_cron_job()
     for x in range(loop_count):
         run_cron_with(time_delay)

@@ -160,9 +160,14 @@ def goal_notification(fixture_item, user_id):
         if event.get('type') == 'Goal':
             print(event)
             elapsed_time = str(event.get('elapsed'))
+
             title = 'Goal - ' + elapsed_time + ' min'
             sent_notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
-            if sent_notification:
+
+            title2 = 'Goal - ' + str(event.get('elapsed') - 1) + ' min'
+            sent_notification2 = SentNotification.objects.filter(title=title2, subtitle=subtitle, user=user_id)
+
+            if sent_notification or sent_notification2:
                 pass
             else:
                 push_notify(title, subtitle, user_id, info.GOALS, fixture_item.get('fixture_id'))
@@ -243,6 +248,8 @@ def check_for_updates(fixture_id):
         notification_priority.first_notification = info.not_first
         notification_priority.save()
         init(fixture_item, notification_priority.get_user_id(), fixture_id)
+        if fixture_item[0].get('status') == 'Match Finished':
+            notification_priority.delete()
 
     if fixture_item[0].get('status') == 'Match Finished':
         fixture = Fixtures.objects.get(fixture_id=fixture_id)
