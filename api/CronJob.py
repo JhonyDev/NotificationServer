@@ -1,10 +1,10 @@
 import datetime
 
-from .models import Fixtures, CronLogs
+from .models import Fixtures
 from .notification_utils import check_for_updates
 import time
 
-time_delay = 3
+time_delay = 6
 loop_count = int(60 / time_delay)
 
 
