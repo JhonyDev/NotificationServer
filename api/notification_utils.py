@@ -8,7 +8,7 @@ from api import info
 is_first = info.not_first
 
 
-def push_notify(title, subtitle, user_id, notification_type):
+def push_notify(title, subtitle, user_id):
     notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
     global is_first
     print('------>>>>>> GLOBAL ' + is_first + ' <<<<<<---------')
@@ -16,17 +16,11 @@ def push_notify(title, subtitle, user_id, notification_type):
         print('notification already sent')
         return
 
-    if is_first == info.first:
-        if notification_type == info.FULL_TIME or notification_type == info.HALF_TIME or notification_type == info.KICK_OFF:
-            print('first so not sent')
-            add_to_sent_notifications(title, subtitle, user_id)
-        else:
-            print('Added event to queue')
-            add_to_sent_notifications(title, subtitle, user_id)
-    else:
+    if is_first != info.first:
         print('published notification')
         notify(user_id, title, subtitle)
-        add_to_sent_notifications(title, subtitle, user_id)
+
+    add_to_sent_notifications(title, subtitle, user_id)
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
@@ -80,7 +74,7 @@ def full_time_notification(fixture_item, user_id):
         title = 'Full Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('fulltime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
-        push_notify(title, subtitle, user_id, info.FULL_TIME)
+        push_notify(title, subtitle, user_id)
 
 
 def half_time_notification(fixture_item, user_id):
@@ -89,7 +83,7 @@ def half_time_notification(fixture_item, user_id):
         title = 'Half Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
-        push_notify(title, subtitle, user_id, info.HALF_TIME)
+        push_notify(title, subtitle, user_id)
 
 
 def kick_off_notification(fixture_item, user_id):
@@ -97,7 +91,7 @@ def kick_off_notification(fixture_item, user_id):
         title = 'Kick Off'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get(
             'team_name')
-        push_notify(title, subtitle, user_id, info.KICK_OFF)
+        push_notify(title, subtitle, user_id)
 
 
 def red_card_notification(fixture_item, user_id):
@@ -110,10 +104,8 @@ def red_card_notification(fixture_item, user_id):
             elapsed_time = str(event.get('elapsed'))
             title = 'RED CARD - ' + elapsed_time + ' min'
             sent_notification = SentNotification.objects.filter(user=user_id, subtitle=subtitle, title=title)
-            if sent_notification:
-                pass
-            else:
-                push_notify(title, subtitle, user_id, info.RED_CARDS)
+            if not sent_notification:
+                push_notify(title, subtitle, user_id)
 
 
 def yellow_card_notification(fixture_item, user_id):
@@ -126,10 +118,8 @@ def yellow_card_notification(fixture_item, user_id):
             elapsed_time = str(event.get('elapsed'))
             title = 'Yellow Card - ' + elapsed_time + ' min'
             sent_notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
-            if sent_notification:
-                pass
-            else:
-                push_notify(title, subtitle, user_id, info.YELLOW_CARDS)
+            if not sent_notification:
+                push_notify(title, subtitle, user_id)
 
 
 def goal_notification(fixture_item, user_id):
@@ -147,10 +137,8 @@ def goal_notification(fixture_item, user_id):
             title = 'Goal - ' + elapsed_time + ' min'
             sent_notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
 
-            if sent_notification:
-                pass
-            else:
-                push_notify(title, subtitle, user_id, info.GOALS)
+            if not sent_notification:
+                push_notify(title, subtitle, user_id)
 
 
 def check_if_in_priority(param, fixture_id, fixture_item, user_id):
