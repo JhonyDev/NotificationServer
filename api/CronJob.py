@@ -4,7 +4,7 @@ from .models import Fixtures
 from .notification_utils import check_for_updates
 import time
 
-time_delay = 15
+time_delay = 20
 loop_count = int(60 / time_delay)
 
 
