@@ -79,7 +79,7 @@ def full_time_notification(fixture_item, user_id):
 
 def half_time_notification(fixture_item, user_id):
     print(fixture_item.get('score'))
-    if fixture_item['elapsed'] >= 45:
+    if fixture_item['status'] == 'Halftime':
         title = 'Half Time'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' ' + str(fixture_item.get('score').get('halftime'))
         subtitle += ' ' + fixture_item.get('awayTeam').get('team_name')
