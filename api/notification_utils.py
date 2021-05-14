@@ -15,6 +15,7 @@ def push_notify(title, subtitle, user_id):
         return
 
     if is_first == info.not_first:
+        print(is_first)
         notify(user_id, title, subtitle)
 
     add_to_sent_notifications(title, subtitle, user_id)
