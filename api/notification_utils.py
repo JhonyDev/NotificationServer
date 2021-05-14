@@ -9,7 +9,7 @@ is_first = info.not_first
 
 
 def push_notify(title, subtitle, user_id):
-    notification = SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id)
+    notification = list(SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id))
     global is_first
     if notification:
         return
@@ -84,7 +84,7 @@ def half_time_notification(fixture_item, user_id):
 
 
 def kick_off_notification(fixture_item, user_id):
-    if 0 <= fixture_item.get('elapsed') <= 5:
+    if 0 < fixture_item.get('elapsed') <= 5:
         title = 'Kick Off'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get(
             'team_name')
