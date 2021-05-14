@@ -4,8 +4,8 @@ from .models import Fixtures
 from .notification_utils import check_for_updates
 import time
 
-time_delay = 20
-loop_count = int(60 / time_delay)
+time_delay = 16
+loop_count = int(50 / time_delay)
 
 
 def my_cron_job():
@@ -22,5 +22,5 @@ def run_cron_with(delay):
 
 def run_cron():
     my_cron_job()
-    for x in range(loop_count):
+    for x in range(3):
         run_cron_with(time_delay)
