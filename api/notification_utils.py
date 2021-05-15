@@ -14,16 +14,19 @@ def push_notify(title, subtitle, user_id):
     notification = list(SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id))
     if notification:
         return
+    is_sent = 'False'
 
     global is_first
     if is_first == info.not_first:
         print(is_first)
         notify(user_id, title, subtitle)
+        is_sent = 'True'
 
     add_to_sent_notifications(title, subtitle, user_id)
     log = CronLogs()
     time = str(datetime.datetime.now())
-    log.log_time = 'is first : ' + is_first + ' \ntitle : ' + title + ' \nsubtitle : ' + subtitle + ' \n user : ' + user_id + ' \n SentTime : ' + time
+
+    log.log_time = 'is first : ' + is_first + ' \ntitle : ' + title + ' \nsubtitle : ' + subtitle + ' \n user : ' + user_id + ' \n SentTime : ' + time + ' \n is_sent : ' + is_sent
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
