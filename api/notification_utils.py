@@ -1,24 +1,29 @@
+import datetime
 import json
 
-from pusher_push_notifications import PushNotifications
 import requests
-from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures
+from pusher_push_notifications import PushNotifications
+
 from api import info
+from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures, CronLogs
 
 is_first = info.not_first
 
 
 def push_notify(title, subtitle, user_id):
     notification = list(SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id))
-    global is_first
     if notification:
         return
 
+    global is_first
     if is_first == info.not_first:
         print(is_first)
         notify(user_id, title, subtitle)
 
     add_to_sent_notifications(title, subtitle, user_id)
+    log = CronLogs()
+    time = str(datetime.datetime.now())
+    log.log_time = 'is first : ' + is_first + ' \ntitle : ' + title + ' \nsubtitle : ' + subtitle + ' \n user : ' + user_id + ' \n SentTime : ' + time
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
@@ -85,7 +90,7 @@ def half_time_notification(fixture_item, user_id):
 
 
 def kick_off_notification(fixture_item, user_id):
-    if 0 < fixture_item.get('elapsed') <= 5:
+    if fixture_item.get('status') == 'First Half':
         title = 'Kick Off'
         subtitle = fixture_item.get('homeTeam').get('team_name') + ' v ' + fixture_item.get('awayTeam').get(
             'team_name')
@@ -199,8 +204,6 @@ def check_for_updates(fixture_id):
         return
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
-        first_priority = notification_priority.get_first()
-        print('#####--->>>>>' + first_priority)
         global is_first
         is_first = notification_priority.get_first()
         if is_first == info.first:

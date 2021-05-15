@@ -106,7 +106,7 @@ class Users(models.Model):
 
 
 class CronLogs(models.Model):
-    log_time = models.CharField(max_length=100)
+    log_time = models.CharField(max_length=1000)
     objects = models.Manager()
 
 
