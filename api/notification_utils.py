@@ -7,21 +7,14 @@ from pusher_push_notifications import PushNotifications
 from api import info
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures, CronLogs
 
-is_first = info.not_first
-
 
 def push_notify(title, subtitle, user_id):
     notification = list(SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id))
     if notification:
         return
-    is_sent = 'False'
+    is_sent = 'True'
 
-    global is_first
-    if is_first == info.not_first:
-        print(is_first)
-        notify(user_id, title, subtitle)
-        is_sent = 'True'
-
+    notify(user_id, title, subtitle)
     add_to_sent_notifications(title, subtitle, user_id)
     log = CronLogs()
     time = str(datetime.datetime.now())
@@ -107,7 +100,8 @@ def red_card_notification(fixture_item, user_id):
     if events is None:
         return
     for event in events:
-        if event.get('detail') == info.RED_CARD:
+        if event.get('detail') == info.RED_CARD and (fixture_item.get('elapsed') - 4) <= event.get('elapsed') <= (
+                fixture_item.get('elapsed') + 4):
             elapsed_time = str(event.get('elapsed'))
             title = 'RED CARD - ' + elapsed_time + ' min'
             push_notify(title, subtitle, user_id)
@@ -119,7 +113,8 @@ def yellow_card_notification(fixture_item, user_id):
     if events is None:
         return
     for event in events:
-        if event.get('detail') == info.YELLOW_CARD:
+        if event.get('detail') == info.YELLOW_CARD and (fixture_item.get('elapsed') - 4) <= event.get('elapsed') <= (
+                fixture_item.get('elapsed') + 4):
             elapsed_time = str(event.get('elapsed'))
             title = 'Yellow Card - ' + elapsed_time + ' min'
             push_notify(title, subtitle, user_id)
@@ -133,7 +128,8 @@ def goal_notification(fixture_item, user_id):
         return
 
     for event in events:
-        if event.get('type') == 'Goal':
+        if event.get('type') == 'Goal' and (fixture_item.get('elapsed') - 4) <= event.get('elapsed') <= (
+                fixture_item.get('elapsed') + 4):
             print(event)
             elapsed_time = str(event.get('elapsed'))
             title = 'Goal - ' + elapsed_time + ' min'
@@ -208,11 +204,6 @@ def check_for_updates(fixture_id):
         return
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
-        global is_first
-        is_first = notification_priority.get_first()
-        if is_first == info.first:
-            notification_priority.first_notification = info.not_first
-            notification_priority.save()
         init(fixture_item, notification_priority.get_user_id(), fixture_id)
         if fixture_item[0].get('status') == 'Match Finished':
             notification_priority.delete()
