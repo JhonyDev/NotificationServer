@@ -37,16 +37,7 @@ def api_post_notification_priority(request):
         fixture.fixture_id = new_notification_priority.get_fixture_id()
         fixture.save()
 
-        if new_notification_priority.get_full_time_result() == 1 and new_notification_priority.get_half_time_result(
-        ) == 1 and new_notification_priority.get_kick_off(
-        ) == 1 and new_notification_priority.get_red_cards(
-        ) == 1 and new_notification_priority.get_yellow_cards(
-        ) == 1 and new_notification_priority.get_goals() == 1:
-            new_notification_priority.delete()
-            priorities = list(NotificationPriority.objects.filter(user_id=new_notification_priority.user_id,
-                                                                  fixture_id=new_notification_priority.fixture_id))
-            for priority in priorities:
-                priority.delete()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
