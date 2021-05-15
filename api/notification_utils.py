@@ -27,6 +27,7 @@ def push_notify(title, subtitle, user_id):
     time = str(datetime.datetime.now())
 
     log.log_time = 'is first : ' + is_first + ' \ntitle : ' + title + ' \nsubtitle : ' + subtitle + ' \n user : ' + user_id + ' \n SentTime : ' + time + ' \n is_sent : ' + is_sent
+    log.save()
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
