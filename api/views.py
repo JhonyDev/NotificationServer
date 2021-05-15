@@ -59,5 +59,16 @@ def api_post_notification_priority(request2):
 
 def test(request2):
     my_cron_job()
+
     time_stamp = str(datetime.datetime.now())
-    return HttpResponse('Cron Initiated ' + time_stamp)
+    from pyfcm import FCMNotification
+
+    push_service = FCMNotification(api_key="AAAAYp0p49k:APA91bFLGiWS4gI8BFyX5-62Qf7mGn26Z8jK8GzQdG6y55dNvj30TKCAF58M7Xd5-xE6foQEMv_qDOxxO-j-FkUkDAGM_J-vc5J1H1rpO2X94WqX6hSSR7bm_AW6LxH0eojrviHW38WO")
+
+    registration_id = "dc3IMFE6SieDuF32qGNxCO:APA91bHYttxCK3Yxia_M6lr3W8GXE7YRdM6J7lP8jJTZJs9rT5-6X-OHVYTTSd-uPsyTd2LNV9EDJITvtQWuT5fGSuD4uxeWMo1Np2HWdvOQAfdQvC8C44048Q94tKsgFJL8op1oNq-a"
+    message_title = "Uber update"
+    message_body = "Hi john, your customized news for today is ready"
+    result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title,
+                                               message_body=message_body)
+
+    return HttpResponse(result)
