@@ -2,7 +2,7 @@ import datetime
 import time
 
 from django.http import HttpResponse
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from pusher_push_notifications import PushNotifications
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -13,10 +13,9 @@ from .models import NotificationPriority, NotificationStatus, Fixtures
 from .serializers import NotificationPrioritySerializer
 
 beams_client = PushNotifications(
-    instance_id='YOUR_INSTANCE_ID_HERE',
-    secret_key='YOUR_SECRET_KEY_HERE',
+    instance_id='1889a652-be8c-4e56-aed1-04bedd6eff47',
+    secret_key='6274C8792B95D8C0A54DBE48ABFF7807DEEF94C6EFA83518E676280272254356',
 )
-
 app = Flask(__name__)
 
 
