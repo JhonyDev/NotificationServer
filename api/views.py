@@ -26,7 +26,7 @@ def current_milli_time():
 @api_view(['GET', ])
 def api_post_user_id(request2):
     user_id = str(current_milli_time())
-    user_id_in_query_param = request2.args.get('user_id')
+    user_id_in_query_param = request.args.get('user_id')
     print('###############' + user_id_in_query_param)
     if user_id != user_id_in_query_param:
         return 'Inconsistent request', 401
