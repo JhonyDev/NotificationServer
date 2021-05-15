@@ -63,7 +63,8 @@ def test(request2):
     time_stamp = str(datetime.datetime.now())
     from pyfcm import FCMNotification
 
-    push_service = FCMNotification(api_key="AAAAYp0p49k:APA91bFLGiWS4gI8BFyX5-62Qf7mGn26Z8jK8GzQdG6y55dNvj30TKCAF58M7Xd5-xE6foQEMv_qDOxxO-j-FkUkDAGM_J-vc5J1H1rpO2X94WqX6hSSR7bm_AW6LxH0eojrviHW38WO")
+    push_service = FCMNotification(
+        api_key="AIzaSyB_Yi13n4eXDwhu3NypCS1U969Lk_gPiLg")
 
     registration_id = "dc3IMFE6SieDuF32qGNxCO:APA91bHYttxCK3Yxia_M6lr3W8GXE7YRdM6J7lP8jJTZJs9rT5-6X-OHVYTTSd-uPsyTd2LNV9EDJITvtQWuT5fGSuD4uxeWMo1Np2HWdvOQAfdQvC8C44048Q94tKsgFJL8op1oNq-a"
     message_title = "Uber update"
@@ -72,3 +73,6 @@ def test(request2):
                                                message_body=message_body)
 
     return HttpResponse(result)
+
+
+
