@@ -197,7 +197,6 @@ def check_for_updates(fixture_id):
         return
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
-        init(fixture_item, notification_priority.get_user_id(), notification_priority)
 
         if notification_priority.get_full_time_result() == 0 and notification_priority.get_half_time_result(
         ) == 0 and notification_priority.get_kick_off(
@@ -209,6 +208,7 @@ def check_for_updates(fixture_id):
                                                                   fixture_id=notification_priority.fixture_id))
             for priority in priorities:
                 priority.delete()
+        init(fixture_item, notification_priority.get_user_id(), notification_priority)
 
         if fixture_item[0].get('status') == 'Match Finished':
             notification_priority.delete()
