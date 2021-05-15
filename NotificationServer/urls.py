@@ -21,8 +21,8 @@ from api.views import (api_post_user_id, api_post_notification_priority, test)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/post_user_id', api_post_user_id, name='post'),
-    path('api/post_notification_priority', api_post_notification_priority, name='get'),
+    path('api/post_user_id', api_post_user_id, name='get'),
+    path('api/post_notification_priority', api_post_notification_priority, name='post'),
     path('api/test', test, name='get'),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
