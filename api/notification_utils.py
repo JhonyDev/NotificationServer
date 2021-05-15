@@ -12,14 +12,13 @@ def push_notify(title, subtitle, user_id):
     notification = list(SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id))
     if notification:
         return
-    is_sent = 'True'
 
     notify(user_id, title, subtitle)
     add_to_sent_notifications(title, subtitle, user_id)
     log = CronLogs()
     time = str(datetime.datetime.now())
 
-    log.log_time = 'is first : ' + is_first + ' \ntitle : ' + title + ' \nsubtitle : ' + subtitle + ' \n user : ' + user_id + ' \n SentTime : ' + time + ' \n is_sent : ' + is_sent
+    log.log_time = '\ntitle : ' + title + ' \nsubtitle : ' + subtitle + ' \n user : ' + user_id + ' \n SentTime : ' + time
     log.save()
 
 
@@ -136,49 +135,43 @@ def goal_notification(fixture_item, user_id):
             push_notify(title, subtitle, user_id)
 
 
-def check_if_in_priority(param, fixture_id, fixture_item, user_id):
-    notification_priorities = NotificationPriority.objects.filter(user_id=user_id, fixture_id=fixture_id)
-    for notification_priority in notification_priorities:
-        if not notification_priority:
-            return
+def check_if_in_priority(param, fixture_item, user_id, notification_priority):
+    if param == info.FULL_TIME:
+        if notification_priority.get_full_time_result() == 1:
+            full_time_notification(fixture_item, user_id)
 
-        if param == info.FULL_TIME:
-            if notification_priority.get_full_time_result() == 1:
-                full_time_notification(fixture_item, user_id)
+    if param == info.HALF_TIME:
+        if notification_priority.get_half_time_result() == 1:
+            half_time_notification(fixture_item, user_id)
 
-        if param == info.HALF_TIME:
-            if notification_priority.get_half_time_result() == 1:
-                half_time_notification(fixture_item, user_id)
+    if param == info.KICK_OFF:
+        if notification_priority.get_kick_off() == 1:
+            kick_off_notification(fixture_item, user_id)
 
-        if param == info.KICK_OFF:
-            if notification_priority.get_kick_off() == 1:
-                kick_off_notification(fixture_item, user_id)
+    if param == info.RED_CARDS:
+        if notification_priority.get_red_cards() == 1:
+            fixture_item['redCards'] = fixture_item.get('redCards', 0) + 1
+            red_card_notification(fixture_item, user_id)
 
-        if param == info.RED_CARDS:
-            if notification_priority.get_red_cards() == 1:
-                fixture_item['redCards'] = fixture_item.get('redCards', 0) + 1
-                red_card_notification(fixture_item, user_id)
+    if param == info.YELLOW_CARDS:
+        if notification_priority.get_yellow_cards() == 1:
+            fixture_item['yellowCards'] = fixture_item.get('yellowCards', 0) + 1
+            yellow_card_notification(fixture_item, user_id)
 
-        if param == info.YELLOW_CARDS:
-            if notification_priority.get_yellow_cards() == 1:
-                fixture_item['yellowCards'] = fixture_item.get('yellowCards', 0) + 1
-                yellow_card_notification(fixture_item, user_id)
-
-        if param == info.GOALS:
-            if notification_priority.get_goals() == 1:
-                goal_notification(fixture_item, user_id)
-        break
+    if param == info.GOALS:
+        if notification_priority.get_goals() == 1:
+            goal_notification(fixture_item, user_id)
 
 
-def init(fixture_item, user_id, fixture_id):
+def init(fixture_item, user_id, notification_priority):
     fixture_item = fixture_item[0]
 
-    check_if_in_priority(info.HALF_TIME, fixture_id, fixture_item, user_id)
-    check_if_in_priority(info.FULL_TIME, fixture_id, fixture_item, user_id)
-    check_if_in_priority(info.KICK_OFF, fixture_id, fixture_item, user_id)
-    check_if_in_priority(info.YELLOW_CARDS, fixture_id, fixture_item, user_id)
-    check_if_in_priority(info.RED_CARDS, fixture_id, fixture_item, user_id)
-    check_if_in_priority(info.GOALS, fixture_id, fixture_item, user_id)
+    check_if_in_priority(info.HALF_TIME, fixture_item, user_id, notification_priority)
+    check_if_in_priority(info.FULL_TIME, fixture_item, user_id, notification_priority)
+    check_if_in_priority(info.KICK_OFF, fixture_item, user_id, notification_priority)
+    check_if_in_priority(info.YELLOW_CARDS, fixture_item, user_id, notification_priority)
+    check_if_in_priority(info.RED_CARDS, fixture_item, user_id, notification_priority)
+    check_if_in_priority(info.GOALS, fixture_item, user_id, notification_priority)
 
 
 def check_for_updates(fixture_id):
@@ -204,7 +197,7 @@ def check_for_updates(fixture_id):
         return
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
-        init(fixture_item, notification_priority.get_user_id(), fixture_id)
+        init(fixture_item, notification_priority.get_user_id(), notification_priority)
         if fixture_item[0].get('status') == 'Match Finished':
             notification_priority.delete()
 
