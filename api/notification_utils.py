@@ -113,8 +113,7 @@ def goal_notification(fixture_item, user_id):
         return
 
     for event in events:
-        if event.get('type') == 'Goal' and (fixture_item.get('elapsed') - 4) <= event.get('elapsed') <= (
-                fixture_item.get('elapsed') + 4):
+        if event.get('type') == 'Goal':
             print(event)
             elapsed_time = str(event.get('elapsed'))
             title = 'Goal - ' + elapsed_time + ' min'
