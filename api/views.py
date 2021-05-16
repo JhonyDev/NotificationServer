@@ -2,7 +2,7 @@ import time
 
 import firebase_admin
 from django.http import HttpResponse
-from firebase_admin import credentials
+from firebase_admin import credentials, messaging
 from flask import Flask, jsonify, request
 from pusher_push_notifications import PushNotifications
 from rest_framework import status
@@ -66,6 +66,13 @@ def test(request2):
     sent = SentNotification.objects.all()
     stri = ''
     for s in sent:
-        stri += s.title + ' <br>' + s.subtitle + ' <br>' + s.user + ' <br>'
-
+        stri += s.title + ' <br>' + s.subtitle + ' <br>' + s.user + ' <br><br>'
+    registration_tokens = ['cireTIxnSZ-37vPv_q-ZT7:APA91bGd56aogZBh0TizG7Xa1VYDIzjI0kUaOekOyAw0TEFyrzqMYXyfAYr3y78TothFy5yz-IztGY1v3-AyA-iESGfDjv6LCuRAWVCcuxjhyUBdxCPFVtICs2uPAZO6J7NVcejy015N']
+    message = messaging.MulticastMessage(
+        notification=messaging.Notification(title="title",
+                                            body="subtitle",
+                                            ),
+        tokens=registration_tokens
+    )
+    messaging.send_multicast(message)
     return HttpResponse(stri)
