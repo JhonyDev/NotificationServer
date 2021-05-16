@@ -1,13 +1,13 @@
 import time
 
+import firebase_admin
+from firebase_admin import credentials
 from firebase_admin import messaging
 from flask import Flask, jsonify, request
 from pusher_push_notifications import PushNotifications
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-import firebase_admin
-from firebase_admin import credentials
 
 from .models import NotificationPriority, NotificationStatus, Fixtures
 from .serializers import NotificationPrioritySerializer
@@ -57,16 +57,18 @@ def api_post_notification_priority(request2):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-cred = credentials.Certificate("/home/jj/NotificationServer/football-live-117ab-firebase-adminsdk-rvvqx-3a7174930c.json")
+cred = credentials.Certificate(
+    "/home/jj/NotificationServer/football-live-117ab-firebase-adminsdk-rvvqx-3a7174930c.json")
 firebase_admin.initialize_app(cred)
 
 
 def test(request2):
     registration_token = 'eSkmgRgoS9mA_cOguq1aGC:APA91bHxh1xJkW1nE6-SwicnnzLFs6Hqtrspbx5_xjwDIoLpx8XAZozBYJ9aXPHbtJsskPKP3mH5Dkf4uI4z7DfX7964goCHEGH9tQWUVwWKpsQH5yCWnriwL73TOOTpdtLP2IQJrfki'
+    registration_tokens = [registration_token]
     message = messaging.MulticastMessage(
         notification=messaging.Notification(title='asdashd',
                                             body='aslkdjlksa',
                                             ),
-        tokens=registration_token
+        tokens=registration_tokens
     )
     return messaging.send_multicast(message)
