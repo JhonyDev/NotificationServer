@@ -57,7 +57,7 @@ def api_post_notification_priority(request2):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-cred = credentials.Certificate("/home/jj/NotificationServer/serviceAccountKey.json")
+cred = credentials.Certificate("/home/jj/NotificationServer/football-live-117ab-firebase-adminsdk-rvvqx-3a7174930c.json")
 firebase_admin.initialize_app(cred)
 
 
