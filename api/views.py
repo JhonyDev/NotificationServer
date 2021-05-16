@@ -6,6 +6,8 @@ from pusher_push_notifications import PushNotifications
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import firebase_admin
+from firebase_admin import credentials
 
 from .models import NotificationPriority, NotificationStatus, Fixtures
 from .serializers import NotificationPrioritySerializer
@@ -53,6 +55,10 @@ def api_post_notification_priority(request2):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+cred = credentials.Certificate("/home/jj/NotificationServer/serviceAccountKey.json")
+firebase_admin.initialize_app(cred)
 
 
 def test(request2):

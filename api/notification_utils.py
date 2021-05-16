@@ -1,16 +1,11 @@
 import datetime
 import json
 
-import firebase_admin
 import requests
-from firebase_admin import credentials
 from pusher_push_notifications import PushNotifications
 
 from api import info
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures, CronLogs
-
-cred = credentials.Certificate("/home/jj/NotificationServer/serviceAccountKey.json")
-firebase_admin.initialize_app(cred)
 
 
 def push_notify(title, subtitle, user_id):
