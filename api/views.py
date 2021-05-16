@@ -3,14 +3,13 @@ import time
 import firebase_admin
 from django.http import HttpResponse
 from firebase_admin import credentials
-from firebase_admin import messaging
 from flask import Flask, jsonify, request
 from pusher_push_notifications import PushNotifications
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import NotificationPriority, NotificationStatus, Fixtures
+from .models import NotificationPriority, NotificationStatus, Fixtures, SentNotification
 from .serializers import NotificationPrioritySerializer
 
 beams_client = PushNotifications(
@@ -64,13 +63,9 @@ firebase_admin.initialize_app(cred)
 
 
 def test(request2):
-    registration_token = 'eSkmgRgoS9mA_cOguq1aGC:APA91bHxh1xJkW1nE6-SwicnnzLFs6Hqtrspbx5_xjwDIoLpx8XAZozBYJ9aXPHbtJsskPKP3mH5Dkf4uI4z7DfX7964goCHEGH9tQWUVwWKpsQH5yCWnriwL73TOOTpdtLP2IQJrfki'
-    registration_tokens = [registration_token]
-    message = messaging.MulticastMessage(
-        notification=messaging.Notification(title='asdashd',
-                                            body='aslkdjlksa',
-                                            ),
-        tokens=registration_tokens
-    )
-    result = messaging.send_multicast(message)
-    return HttpResponse(result)
+    sent = SentNotification.objects.all()
+    stri = ''
+    for s in sent:
+        stri += s.title + ' <br>' + s.subtitle + ' <br>' + s.user + ' <br>'
+
+    return HttpResponse(stri)
