@@ -1,14 +1,12 @@
-import datetime
 import time
 
-from django.http import HttpResponse
+from firebase_admin import messaging
 from flask import Flask, jsonify, request
 from pusher_push_notifications import PushNotifications
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .CronJob import my_cron_job
 from .models import NotificationPriority, NotificationStatus, Fixtures
 from .serializers import NotificationPrioritySerializer
 
@@ -58,21 +56,11 @@ def api_post_notification_priority(request2):
 
 
 def test(request2):
-    my_cron_job()
-
-    time_stamp = str(datetime.datetime.now())
-    from pyfcm import FCMNotification
-
-    push_service = FCMNotification(
-        api_key="AIzaSyB_Yi13n4eXDwhu3NypCS1U969Lk_gPiLg")
-
-    registration_id = "dc3IMFE6SieDuF32qGNxCO:APA91bHYttxCK3Yxia_M6lr3W8GXE7YRdM6J7lP8jJTZJs9rT5-6X-OHVYTTSd-uPsyTd2LNV9EDJITvtQWuT5fGSuD4uxeWMo1Np2HWdvOQAfdQvC8C44048Q94tKsgFJL8op1oNq-a"
-    message_title = "Uber update"
-    message_body = "Hi john, your customized news for today is ready"
-    result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title,
-                                               message_body=message_body)
-
-    return HttpResponse(result)
-
-
-
+    registration_token = 'eSkmgRgoS9mA_cOguq1aGC:APA91bHxh1xJkW1nE6-SwicnnzLFs6Hqtrspbx5_xjwDIoLpx8XAZozBYJ9aXPHbtJsskPKP3mH5Dkf4uI4z7DfX7964goCHEGH9tQWUVwWKpsQH5yCWnriwL73TOOTpdtLP2IQJrfki'
+    message = messaging.MulticastMessage(
+        notification=messaging.Notification(title='asdashd',
+                                            body='aslkdjlksa',
+                                            ),
+        tokens=registration_token
+    )
+    return messaging.send_multicast(message)
