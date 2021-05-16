@@ -1,4 +1,5 @@
 from django.db import models
+
 from api import info
 
 
@@ -84,7 +85,7 @@ class NotificationQueue(models.Model):
 class SentNotification(models.Model):
     title = models.CharField(max_length=100)
     subtitle = models.CharField(max_length=100)
-    user = models.CharField(max_length=100)
+    user = models.CharField(max_length=500)
     objects = models.Manager()
 
     def get_title(self):
