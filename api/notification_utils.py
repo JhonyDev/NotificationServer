@@ -2,7 +2,7 @@ import datetime
 import json
 
 import requests
-from pusher_push_notifications import PushNotifications
+from firebase_admin import messaging
 
 from api import info
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures, CronLogs
@@ -43,28 +43,14 @@ def add_notification_to_queue(notification_type, subtitle, user_id, title, fixtu
 
 
 def notify(user_id, title, subtitle):
-    beams_client = PushNotifications(
-        instance_id='1889a652-be8c-4e56-aed1-04bedd6eff47',
-        secret_key='6274C8792B95D8C0A54DBE48ABFF7807DEEF94C6EFA83518E676280272254356',
+    registration_tokens = [user_id]
+    message = messaging.MulticastMessage(
+        notification=messaging.Notification(title=title,
+                                            body=subtitle,
+                                            ),
+        tokens=registration_tokens
     )
-    response = beams_client.publish_to_interests(
-        interests=[user_id],
-        publish_body={
-            'apns': {
-                'aps': {
-                    'alert': 'alert!'
-                }
-            },
-            'fcm': {
-                'notification': {
-                    'title': title,
-                    'body': subtitle
-                }
-            }
-        }
-    )
-    print(user_id)
-    print(response)
+    messaging.send_multicast(message)
 
 
 def full_time_notification(fixture_item, user_id):
