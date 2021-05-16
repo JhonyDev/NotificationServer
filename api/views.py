@@ -1,6 +1,7 @@
 import time
 
 import firebase_admin
+from django.http import HttpResponse
 from firebase_admin import credentials
 from firebase_admin import messaging
 from flask import Flask, jsonify, request
@@ -71,4 +72,5 @@ def test(request2):
                                             ),
         tokens=registration_tokens
     )
-    return messaging.send_multicast(message)
+    result = messaging.send_multicast(message)
+    return HttpResponse(result)
