@@ -67,7 +67,13 @@ def test(request2):
     stri = ''
     for s in sent:
         stri += s.title + ' <br>' + s.subtitle + ' <br>' + s.user + ' <br><br>'
-    registration_tokens = ['cireTIxnSZ-37vPv_q-ZT7:APA91bGd56aogZBh0TizG7Xa1VYDIzjI0kUaOekOyAw0TEFyrzqMYXyfAYr3y78TothFy5yz-IztGY1v3-AyA-iESGfDjv6LCuRAWVCcuxjhyUBdxCPFVtICs2uPAZO6J7NVcejy015N']
+
+    nps = NotificationPriority.objects.all()
+
+    registration_tokens = []
+    for np in nps:
+        registration_tokens.append(np.user_id)
+
     message = messaging.MulticastMessage(
         notification=messaging.Notification(title="title",
                                             body="subtitle",
