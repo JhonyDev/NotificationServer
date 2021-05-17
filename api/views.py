@@ -72,6 +72,7 @@ def test(request2):
 
     registration_tokens = []
     for np in nps:
+        stri += np.user_id + '<br>'
         registration_tokens.append(np.user_id)
 
     message = messaging.MulticastMessage(
