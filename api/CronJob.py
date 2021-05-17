@@ -9,6 +9,9 @@ loop_count = int(50 / time_delay)
 
 
 def my_cron_job():
+    cron = CronLogs()
+    cron.log_time = str(datetime.datetime.now())
+    cron.save()
     fixtures = list(Fixtures.objects.all())
     for fixture in fixtures:
         print('fixtures -------- ' + fixture.get_fixture_id())
@@ -16,9 +19,6 @@ def my_cron_job():
 
 
 def run_cron_with(delay):
-    cron = CronLogs()
-    cron.log_time = str(datetime.datetime.now())
-    cron.save()
     time.sleep(delay)
     my_cron_job()
 

@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from CronJob import run_cron
 from .models import NotificationPriority, NotificationStatus, CronLogs, Fixtures, SentNotification
 from .serializers import NotificationPrioritySerializer
 
@@ -99,4 +100,10 @@ def print_crons(request2):
     for s in crons:
         stri += s.log_time + ' <br>'
 
+    return HttpResponse(stri)
+
+
+def run_cron(request2):
+    stri = ''
+    run_cron()
     return HttpResponse(stri)
