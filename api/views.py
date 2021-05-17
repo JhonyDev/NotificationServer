@@ -13,12 +13,6 @@ from .CronJob import run_cron
 from .models import NotificationPriority, NotificationStatus, CronLogs, Fixtures, SentNotification
 from .serializers import NotificationPrioritySerializer
 
-beams_client = PushNotifications(
-    instance_id='1889a652-be8c-4e56-aed1-04bedd6eff47',
-    secret_key='6274C8792B95D8C0A54DBE48ABFF7807DEEF94C6EFA83518E676280272254356',
-)
-app = Flask(__name__)
-
 
 def current_milli_time():
     return round(time.time() * 1000)
@@ -56,11 +50,6 @@ def api_post_notification_priority(request2):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-cred = credentials.Certificate(
-    "/home/jj/NotificationServer/football-11cf0-firebase-adminsdk-cxs9t-7c068c318c.json")
-firebase_admin.initialize_app(cred)
 
 
 def test(request2):
