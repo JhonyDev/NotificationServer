@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import NotificationPriority, NotificationStatus, Fixtures, SentNotification
+from .models import NotificationPriority, NotificationStatus, CronLogs, Fixtures, SentNotification
 from .serializers import NotificationPrioritySerializer
 
 beams_client = PushNotifications(
@@ -68,10 +68,43 @@ def test(request2):
     for s in sent:
         stri += s.title + ' <br>' + s.subtitle + ' <br>' + s.user + ' <br><br>'
 
+    return HttpResponse(stri)
+
+
+def send_notification(request2):
+    stri = ''
+
     nps = NotificationPriority.objects.all()
 
     registration_tokens = []
     for np in nps:
+        stri += np.user_id + '<br>'
+        registration_tokens.append(np.user_id)
+
+    stri += str(registration_tokens) + '<br>'
+
+    message = messaging.MulticastMessage(
+        notification=messaging.Notification(title="title",
+                                            body="subtitle",
+                                            ),
+        tokens=registration_tokens
+    )
+    messaging.send_multicast(message)
+    return HttpResponse(stri)
+
+
+def print_crons(request2):
+    crons = CronLogs.objects.all()
+    stri = ''
+    for s in crons:
+        stri += s.log_time + ' <br>'
+
+    nps = NotificationPriority.objects.all()
+
+    registration_tokens = []
+    for np in nps:
+        if np.user_id in stri:
+            continue
         stri += np.user_id + '<br>'
         registration_tokens.append(np.user_id)
 
