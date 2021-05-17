@@ -19,11 +19,6 @@ def push_notify(title, subtitle, user_id):
 
     notify(user_id, title, subtitle)
     add_to_sent_notifications(title, subtitle, user_id)
-    log = CronLogs()
-    time = str(datetime.datetime.now())
-
-    log.log_time = '\ntitle : ' + title + ' \nsubtitle : ' + subtitle + ' \n user : ' + user_id + ' \n SentTime : ' + time
-    log.save()
 
 
 def add_to_sent_notifications(title, subtitle, user_id):
