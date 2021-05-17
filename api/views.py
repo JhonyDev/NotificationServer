@@ -99,22 +99,4 @@ def print_crons(request2):
     for s in crons:
         stri += s.log_time + ' <br>'
 
-    nps = NotificationPriority.objects.all()
-
-    registration_tokens = []
-    for np in nps:
-        if np.user_id in stri:
-            continue
-        stri += np.user_id + '<br>'
-        registration_tokens.append(np.user_id)
-
-    stri += str(registration_tokens) + '<br>'
-
-    message = messaging.MulticastMessage(
-        notification=messaging.Notification(title="title",
-                                            body="subtitle",
-                                            ),
-        tokens=registration_tokens
-    )
-    messaging.send_multicast(message)
     return HttpResponse(stri)
