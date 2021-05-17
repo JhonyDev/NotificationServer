@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from api.views import (api_post_user_id, api_post_notification_priority, test, send_notification, print_crons, run_cron)
+from api.views import (api_post_user_id, api_post_notification_priority, test, send_notification, print_crons, run_crons)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,6 @@ urlpatterns = [
     path('api/test', test, name='get'),
     path('api/send', send_notification, name='get'),
     path('api/cron', print_crons, name='get'),
-    path('api/run', run_cron, name='get'),
+    path('api/run', run_crons, name='get'),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

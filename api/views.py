@@ -103,7 +103,7 @@ def print_crons(request2):
     return HttpResponse(stri)
 
 
-def run_cron(request2):
+def run_crons(request2):
     stri = ''
     run_cron()
     return HttpResponse(stri)
