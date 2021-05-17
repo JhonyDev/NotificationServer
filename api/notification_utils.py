@@ -2,10 +2,14 @@ import datetime
 import json
 
 import requests
-from firebase_admin import messaging
-
+from firebase_admin import credentials, messaging
+import firebase_admin
 from api import info
 from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures, CronLogs
+
+cred = credentials.Certificate(
+    "/home/jj/NotificationServer/football-11cf0-firebase-adminsdk-cxs9t-7c068c318c.json")
+firebase_admin.initialize_app(cred)
 
 
 def push_notify(title, subtitle, user_id):

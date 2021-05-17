@@ -58,7 +58,7 @@ def api_post_notification_priority(request2):
 
 
 cred = credentials.Certificate(
-    "/home/jj/NotificationServer/football-live-117ab-firebase-adminsdk-rvvqx-3a7174930c.json")
+    "/home/jj/NotificationServer/football-11cf0-firebase-adminsdk-cxs9t-7c068c318c.json")
 firebase_admin.initialize_app(cred)
 
 
