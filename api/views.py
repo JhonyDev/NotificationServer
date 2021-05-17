@@ -75,6 +75,8 @@ def test(request2):
         stri += np.user_id + '<br>'
         registration_tokens.append(np.user_id)
 
+    stri += str(registration_tokens) + '<br>'
+
     message = messaging.MulticastMessage(
         notification=messaging.Notification(title="title",
                                             body="subtitle",
