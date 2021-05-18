@@ -11,8 +11,15 @@ cred = credentials.Certificate(
     "/home/jj/NotificationServer/football-11cf0-firebase-adminsdk-cxs9t-7c068c318c.json")
 firebase_admin.initialize_app(cred)
 
+is_first = info.not_first
+
 
 def push_notify(title, subtitle, user_id):
+    global is_first
+    if is_first == info.first:
+        add_to_sent_notifications(title, subtitle, user_id)
+        return
+
     notification = list(SentNotification.objects.filter(title=title, subtitle=subtitle, user=user_id))
     if notification:
         return
@@ -193,12 +200,14 @@ def check_for_updates(fixture_id):
             for priority in priorities:
                 priority.delete()
 
+        global is_first
+        is_first = notification_priority.first_notification
+
+        init(fixture_item, notification_priority.get_user_id(), notification_priority)
+
         if notification_priority.first_notification == info.first:
             notification_priority.first_notification = info.not_first
             notification_priority.save()
-            continue
-
-        init(fixture_item, notification_priority.get_user_id(), notification_priority)
 
         if fixture_item[0].get('status') == 'Match Finished' or fixture_item[0].get('status') == 'Match Postponed' or \
                 fixture_item[0].get('status') == 'Match Cancelled':
