@@ -52,6 +52,7 @@ class NotificationPriority(models.Model):
 
 class Fixtures(models.Model):
     fixture_id = models.CharField(max_length=20, primary_key=True)
+    is_live = models.BooleanField(default=True)
     objects = models.Manager()
 
     def get_fixture_id(self):

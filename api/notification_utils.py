@@ -1,11 +1,11 @@
-import datetime
 import json
 
+import firebase_admin
 import requests
 from firebase_admin import credentials, messaging
-import firebase_admin
+
 from api import info
-from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures, CronLogs
+from .models import NotificationPriority, NotificationQueue, SentNotification, Fixtures
 
 cred = credentials.Certificate(
     "/home/jj/NotificationServer/football-11cf0-firebase-adminsdk-cxs9t-7c068c318c.json")
@@ -194,9 +194,17 @@ def check_for_updates(fixture_id):
                 priority.delete()
         init(fixture_item, notification_priority.get_user_id(), notification_priority)
 
-        if fixture_item[0].get('status') == 'Match Finished':
+        if fixture_item[0].get('status') == 'Match Finished' or fixture_item[0].get('status') == 'Match Postponed' or \
+                fixture_item[0].get('status') == 'Match Cancelled':
             notification_priority.delete()
 
-    if fixture_item[0].get('status') == 'Match Finished':
-        fixture = Fixtures.objects.get(fixture_id=fixture_id)
+    fixture = Fixtures.objects.get(fixture_id=fixture_id)
+    if fixture_item[0].get('status') == 'Match Finished' or fixture_item[0].get('status') == 'Match Postponed' or \
+            fixture_item[0].get('status') == 'Match Cancelled':
         fixture.delete()
+    elif fixture_item[0].get('status') == 'First Half' or fixture_item[0].get('status') == 'Halftime' or \
+            fixture_item[0].get('status') == 'Second Half':
+        fixture.is_live = True
+    else:
+        fixture.is_live = False
+    fixture.save()
