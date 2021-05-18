@@ -36,5 +36,5 @@ def run_cron_with(delay):
 
 def run_cron():
     my_cron_job(True)
-    for x in range(3):
+    for x in range(loop_count):
         run_cron_with(time_delay)
