@@ -1,16 +1,14 @@
 import time
 
-import firebase_admin
 from django.http import HttpResponse
-from firebase_admin import credentials, messaging
-from flask import Flask, jsonify, request
-from pusher_push_notifications import PushNotifications
+from firebase_admin import messaging
+from flask import jsonify, request
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .CronJob import run_cron
-from .models import NotificationPriority, NotificationStatus, CronLogs, Fixtures, SentNotification
+from .models import NotificationPriority, NotificationStatus, CronLogs, Fixtures
 from .serializers import NotificationPrioritySerializer
 
 
@@ -53,11 +51,10 @@ def api_post_notification_priority(request2):
 
 
 def test(request2):
-    sent = SentNotification.objects.all()
     stri = ''
-    for s in sent:
-        stri += s.title + ' <br>' + s.subtitle + ' <br>' + s.user + ' <br><br>'
-
+    fixtures = list(Fixtures.objects.filter(is_live=True))
+    for fixture in fixtures:
+        stri += fixture.fixture_id + '<br>'
     return HttpResponse(stri)
 
 
