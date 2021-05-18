@@ -14,6 +14,9 @@ def my_cron_job(is_once_in_min):
         for fixture in fixtures:
             fixture.is_live = True
             fixture.save()
+        crons = CronLogs.objects.all()
+        for cron in crons:
+            cron.delete()
 
     cron = CronLogs()
     cron.log_time = str(datetime.datetime.now())
