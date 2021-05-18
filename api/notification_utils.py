@@ -84,8 +84,7 @@ def red_card_notification(fixture_item, user_id):
     if events is None:
         return
     for event in events:
-        if event.get('detail') == info.RED_CARD and (fixture_item.get('elapsed') - 4) <= event.get('elapsed') <= (
-                fixture_item.get('elapsed') + 4):
+        if event.get('detail') == info.RED_CARD:
             elapsed_time = str(event.get('elapsed'))
             title = 'RED CARD - ' + elapsed_time + ' min'
             push_notify(title, subtitle, user_id)
@@ -97,8 +96,7 @@ def yellow_card_notification(fixture_item, user_id):
     if events is None:
         return
     for event in events:
-        if event.get('detail') == info.YELLOW_CARD and (fixture_item.get('elapsed') - 4) <= event.get('elapsed') <= (
-                fixture_item.get('elapsed') + 4):
+        if event.get('detail') == info.YELLOW_CARD:
             elapsed_time = str(event.get('elapsed'))
             title = 'Yellow Card - ' + elapsed_time + ' min'
             push_notify(title, subtitle, user_id)
@@ -186,12 +184,20 @@ def check_for_updates(fixture_id):
         ) == 0 and notification_priority.get_kick_off(
         ) == 0 and notification_priority.get_red_cards(
         ) == 0 and notification_priority.get_yellow_cards(
-        ) == 0 and notification_priority.get_goals() == 0:
+        ) == 0 and notification_priority.get_goals(
+        ) == 0:
+
             notification_priority.delete()
             priorities = list(NotificationPriority.objects.filter(user_id=notification_priority.user_id,
                                                                   fixture_id=notification_priority.fixture_id))
             for priority in priorities:
                 priority.delete()
+
+        if notification_priority.first_notification == info.first:
+            notification_priority.first_notification = info.not_first
+            notification_priority.save()
+            continue
+
         init(fixture_item, notification_priority.get_user_id(), notification_priority)
 
         if fixture_item[0].get('status') == 'Match Finished' or fixture_item[0].get('status') == 'Match Postponed' or \
