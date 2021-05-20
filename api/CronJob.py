@@ -4,8 +4,8 @@ import time
 from .models import Fixtures, CronLogs
 from .notification_utils import check_for_updates
 
-time_delay = 15
-loop_count = int(290 / time_delay)
+time_delay = 3
+loop_count = int(((5 * 60) - time_delay) / time_delay)
 
 
 def my_cron_job(is_once_in_min):

@@ -2,7 +2,6 @@ import time
 
 from django.http import HttpResponse
 from firebase_admin import messaging
-from flask import jsonify, request
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,19 +13,6 @@ from .serializers import NotificationPrioritySerializer
 
 def current_milli_time():
     return round(time.time() * 1000)
-
-
-@api_view(['GET', ])
-def api_post_user_id(request2):
-    with app.app_context():
-        user_id = str(current_milli_time())
-        user_id_in_query_param = request.args.get('user_id')
-        print('###############' + user_id_in_query_param)
-        if user_id != user_id_in_query_param:
-            return 'Inconsistent request', 401
-
-        beams_token = beams_client.generate_token(user_id)
-        return jsonify(beams_token)
 
 
 @api_view(['POST', ])
