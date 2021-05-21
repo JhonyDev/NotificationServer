@@ -4,7 +4,7 @@ import time
 from .models import Fixtures, CronLogs
 from .notification_utils import check_for_updates
 
-time_delay = 3
+time_delay = 15
 loop_count = int(((5 * 60) - time_delay) / time_delay)
 
 
