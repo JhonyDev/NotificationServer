@@ -183,6 +183,7 @@ def check_for_updates(fixture_id):
         print('---No API')
         print(json_object)
         fixture.is_live = False
+        fixture.save()
         return
 
     fixture_item = fixture_item.get('fixtures')
@@ -190,6 +191,7 @@ def check_for_updates(fixture_id):
         print('---No Fixture')
         print(fixture_item)
         fixture.is_live = False
+        fixture.save()
         return
 
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
