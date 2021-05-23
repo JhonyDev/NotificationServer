@@ -177,16 +177,21 @@ def check_for_updates(fixture_id):
     json_object = json.loads(r.content)
     fixture_item = json_object.get('api')
 
+    fixture = Fixtures.objects.get(fixture_id=fixture_id)
+
     if not fixture_item:
         print('---No API')
         print(json_object)
+        fixture.is_live = False
         return
 
     fixture_item = fixture_item.get('fixtures')
     if not fixture_item:
         print('---No Fixture')
         print(fixture_item)
+        fixture.is_live = False
         return
+
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
 
