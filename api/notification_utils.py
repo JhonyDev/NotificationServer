@@ -164,6 +164,9 @@ def init(fixture_item, user_id, notification_priority):
 
 
 def check_for_updates(fixture_id):
+    if len(fixture_id) < 4:
+        return
+
     url = 'https://v2.api-football.com/fixtures/id/' + str(fixture_id)
     headers = {'Accept': 'application/json',
                'content-type': 'application/json',
@@ -217,7 +220,7 @@ def check_for_updates(fixture_id):
     if fixture_item[0].get('status') == 'Match Finished' or fixture_item[0].get('status') == 'Match Postponed' or \
             fixture_item[0].get('status') == 'Match Cancelled':
         fixture.delete()
-    elif fixture_item[0].get('status') == 'First Half' or fixture_item[0].get('status') == 'Halftime' or \
+    if fixture_item[0].get('status') == 'First Half' or fixture_item[0].get('status') == 'Halftime' or \
             fixture_item[0].get('status') == 'Second Half':
         fixture.is_live = True
     else:
