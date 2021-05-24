@@ -227,7 +227,7 @@ def check_for_updates(fixture_id):
     if fixture_item[0].get('status') == 'Match Finished' or fixture_item[0].get('status') == 'Match Postponed' or \
             fixture_item[0].get('status') == 'Match Cancelled':
         fixture.delete()
-    if fixture_item[0].get('status') == 'First Half' or fixture_item[0].get('status') == 'Halftime' or \
+    elif fixture_item[0].get('status') == 'First Half' or fixture_item[0].get('status') == 'Halftime' or \
             fixture_item[0].get('status') == 'Second Half':
         fixture.is_live = True
     else:
