@@ -1,3 +1,4 @@
+import datetime
 import json
 
 import firebase_admin
@@ -163,6 +164,32 @@ def init(fixture_item, user_id, notification_priority):
     check_if_in_priority(info.GOALS, fixture_item, user_id, notification_priority)
 
 
+def is_in_time(current_time_api, target_time_api):
+    target_time_api = target_time_api.replace('+00:00', 'Z')
+
+    now = datetime.datetime.strptime(current_time_api, "%Y-%m-%dT%H:%M:%SZ")
+    target_time = datetime.datetime.strptime(target_time_api, "%Y-%m-%dT%H:%M:%SZ")
+
+    def is_in_range(def_hour, minute):
+        return def_hour == target_time.hour and minute == target_time.minute
+
+    is_time = False
+    for x in range(10):
+        if now.minute + x >= 60:
+            check_hour = (now.hour + 1) % 24
+            check_minute = (now.minute + x) % 60
+            is_time = is_in_range(check_hour, check_minute)
+        else:
+            check_hour = now.hour
+            check_minute = now.minute + x
+            is_time = is_in_range(check_hour, check_minute)
+
+        if is_time:
+            break
+
+    return is_time
+
+
 def check_for_updates(fixture_id):
     if len(fixture_id) < 4:
         return
@@ -231,5 +258,8 @@ def check_for_updates(fixture_id):
             fixture_item[0].get('status') == 'Second Half':
         fixture.is_live = True
     else:
-        fixture.is_live = False
+        current_time_api = datetime.datetime.today().strftime('%Y-%m-%dT%H:%M:%SZ')
+        target_time_api = fixture_item[0].get('event_date')
+        fixture.is_live = is_in_time(current_time_api, target_time_api)
+
     fixture.save()
