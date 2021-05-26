@@ -171,7 +171,14 @@ def is_in_time(current_time_api, target_time_api):
     target_time = datetime.datetime.strptime(target_time_api, "%Y-%m-%dT%H:%M:%SZ")
 
     def is_in_range(def_hour, minute):
-        return def_hour == target_time.hour and minute == target_time.minute
+        if target_time.minute + 15 >= 60:
+            target_hour = (target_time.hour + 1) % 24
+            target_minute = (target_time.minute + 15) % 60
+        else:
+            target_hour = target_time.hour
+            target_minute = target_time.minute + 15
+
+        return def_hour == target_hour and minute == target_minute
 
     is_time = False
     for x in range(10):
