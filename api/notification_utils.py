@@ -231,12 +231,12 @@ def check_for_updates(fixture_id):
     notification_priority_list = NotificationPriority.objects.filter(fixture_id=fixture_id)
     for notification_priority in notification_priority_list:
 
-        if notification_priority.get_full_time_result() == 0 and notification_priority.get_half_time_result(
-        ) == 0 and notification_priority.get_kick_off(
-        ) == 0 and notification_priority.get_red_cards(
-        ) == 0 and notification_priority.get_yellow_cards(
-        ) == 0 and notification_priority.get_goals(
-        ) == 0:
+        if notification_priority.get_full_time_result() == 0 and\
+                notification_priority.get_half_time_result() == 0 and\
+                notification_priority.get_kick_off() == 0 and\
+                notification_priority.get_red_cards() == 0 and\
+                notification_priority.get_yellow_cards() == 0 and\
+                notification_priority.get_goals() == 0:
 
             notification_priority.delete()
             priorities = list(NotificationPriority.objects.filter(user_id=notification_priority.user_id,
